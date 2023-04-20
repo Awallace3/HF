@@ -4,18 +4,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <Eigen/Dense>
 
 int main() {
-  printf("Start\n");
-
+  // Specify Data Path
   std::string dataPath = "data";
-  std::string geom = "data/geom.xyz";
-  std::string eriFN = "data/eri.dat";
-  std::string TFN = "data/T.dat";
-  std::string VFN = "data/V.dat";
-  std::string e1FN = "data/e1.dat";
-  std::string overlapFN = "data/overlap.dat";
 
+  // Make pointers to store input data
   int num_atoms;
   std::vector<int> *elements = nullptr;
   std::vector<double> *eri = nullptr;
@@ -24,12 +19,23 @@ int main() {
   std::vector<std::vector<double>> *V = nullptr;
   std::vector<std::vector<double>> *e1 = nullptr;
   std::vector<std::vector<double>> *S = nullptr;
-  /* input::readGeometry(geom, num_atoms, &elements, &coords); */
+  Eigen::MatrixXd *S_eigen = nullptr;
+
+  // Read Data
   input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &e1,
                     &S);
+  printf("Read Data");
+  // Starting HF Code
+  // diagonalize S
 
+  // Free Allocations
   free(elements);
   free(coords);
-  printf("\nEnd\n");
+  free(T);
+  free(V);
+  free(e1);
+  free(S);
+  free(eri);
+  printf("\nFreed Memory\n");
   return 0;
 }

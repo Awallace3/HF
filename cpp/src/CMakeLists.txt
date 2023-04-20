@@ -1,2 +1,8 @@
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(hf hf.cpp input.cpp)
-target_include_directories(hf PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(hf PUBLIC ${CMAKE_SOURCE_DIR}/include
+    /usr/local/include
+    /usr/local/include/eigen3
+    )
+find_package(OpenMP REQUIRED)
+find_package(Eigen3 REQUIRED)

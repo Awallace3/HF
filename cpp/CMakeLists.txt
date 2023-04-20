@@ -7,18 +7,13 @@ set(CMAKE_C_COMPILER "gcc")
 set(CMAKE_CXX_COMPILER "g++-12")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -fopenmp -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fopenmp")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include_directories(/usr/local/include)
-link_directories(/usr/local/lib)
-# target_include_directories(hf PUBLIC include)
-
-# add_library(eigen3 INTERFACE)
-# add_library(iostream INTERFACE)
+include_directories(/usr/local/include /usr/local/include/eigen3)
+link_directories(/usr/local/lib /usr/local/include/eigen3)
 
 find_package(OpenMP REQUIRED)
+find_package(Eigen3 REQUIRED)
 # find_package(MPI REQUIRED)
 
-# add_subdirectory(include)
 add_subdirectory(src)
-
-# add_executable(hf main.cpp)

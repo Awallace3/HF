@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/Users/austinwallace/gits/HF/cpp/build/src",
+  "command": "g++-12  -I/usr/local/include -I/Users/austinwallace/gits/HF/cpp/include  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -std=gnu++17 -o CMakeFiles/hf.dir/hf.cpp.o -c /Users/austinwallace/gits/HF/cpp/src/hf.cpp",
+  "file": "/Users/austinwallace/gits/HF/cpp/src/hf.cpp"
+},
+{
+  "directory": "/Users/austinwallace/gits/HF/cpp/build/src",
+  "command": "g++-12  -I/usr/local/include -I/Users/austinwallace/gits/HF/cpp/include  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -std=gnu++17 -o CMakeFiles/hf.dir/input.cpp.o -c /Users/austinwallace/gits/HF/cpp/src/input.cpp",
+  "file": "/Users/austinwallace/gits/HF/cpp/src/input.cpp"
+}
+]
