@@ -13,9 +13,7 @@ void showHello();
  * &y_coords, */
 /*                   std::vector<double> &z_coords); */
 void readGeometry(std::string, int &, std::vector<int> **,
-                  std::vector<double> *, std::vector<double> *,
-                  std::vector<double> *);
-
+                  std::vector<std::vector<double>> **);
 
 void numAtoms(std::string, int &);
 void print2dVector(std::vector<std::vector<double>> *);

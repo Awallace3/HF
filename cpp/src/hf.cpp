@@ -13,17 +13,12 @@ int main() {
 
   std::vector<int> *elements = nullptr;
   std::vector<std::vector<double>> *coords = nullptr;
-  std::vector<double> *x_coords = nullptr, *y_coords = nullptr,
-                      *z_coords = nullptr;
   int num_atoms;
   printf("Reading geometry...\n");
-  input::readGeometry(filename, num_atoms, &elements, x_coords, y_coords,
-                      z_coords);
+  input::readGeometry(filename, num_atoms, &elements, &coords);
   std::cout << "Number of atoms: " << num_atoms << std::endl;
   input::printElements(elements);
-
-  /* input::print2dVector(elements); */
-
+  input::print2dVector(coords);
   free(elements);
   printf("\nEnd\n");
 

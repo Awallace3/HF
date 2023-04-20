@@ -1,9 +1,9 @@
 #include "input.hpp"
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
 
 void input::showHello() { std::cout << "Hello World!" << std::endl; }
 
@@ -16,13 +16,9 @@ void input::numAtoms(std::string filename, int &num_atoms) {
   file >> num_atoms;
 }
 
-void input::readGeometry(std::string filename,
-                         int &num_atoms,
+void input::readGeometry(std::string filename, int &num_atoms,
                          std::vector<int> **elements,
-                         std::vector<double> *x_coords,
-                         std::vector<double> *y_coords,
-                         std::vector<double> *z_coords
-                         ) {
+                         std::vector<std::vector<double>> **coords) {
   std::ifstream file(filename);
   if (!file) {
     std::cout << "Could not open file " << filename << std::endl;
@@ -31,6 +27,11 @@ void input::readGeometry(std::string filename,
 
   file >> num_atoms;
   *elements = new std::vector<int>(num_atoms);
+  *coords = new std::vector<std::vector<double>>(num_atoms);
+  for (int i = 0; i < num_atoms; ++i) {
+    (*coords)->at(i) = std::vector<double>(3);
+  }
+
   /* *x_coords = new std::vector<double>(num_atoms); */
   /* *y_coords = new std::vector<double>(num_atoms); */
   /* *z_coords = new std::vector<double>(num_atoms); */
@@ -42,13 +43,10 @@ void input::readGeometry(std::string filename,
     int el = -1;
     double x, y, z;
     file >> el >> x >> y >> z;
-
-    /* elements.push_back(name); */
     (*elements)->at(i) = el;
-    /* std::cout << elements->size() << std::endl; */
-    /* x_coords.push_back(x); */
-    /* y_coords.push_back(y); */
-    /* z_coords.push_back(z); */
+    (*coords)->at(i).at(0) = x;
+    (*coords)->at(i).at(1) = y;
+    (*coords)->at(i).at(2) = z;
   }
   file.close();
   return;
@@ -57,6 +55,7 @@ void input::readGeometry(std::string filename,
 void input::print2dVector(std::vector<std::vector<double>> *matrix) {
   for (int i = 0; u_int64_t(i) < matrix->size(); ++i) {
     for (int j = 0; u_int64_t(j) < matrix->at(i).size(); ++j) {
+        std::cout.precision(12);
       std::cout << matrix->at(i).at(j) << " ";
     }
     std::cout << std::endl;
@@ -65,8 +64,7 @@ void input::print2dVector(std::vector<std::vector<double>> *matrix) {
 
 void input::printElements(std::vector<int> *matrix) {
   for (int i = 0; u_int64_t(i) < matrix->size(); ++i) {
-      std::cout << matrix->at(i) << " ";
+    std::cout << matrix->at(i) << " ";
     std::cout << std::endl;
   }
 }
-
