@@ -6,10 +6,7 @@
 #include <string>
 #include <vector>
 
-void input::showHello() { std::cout << "Hello World!" << std::endl; }
-
-void input::read2DVector(std::string fn,
-                         std::vector<std::vector<double>> **arr) {
+void input::readVector(std::string fn, std::vector<std::vector<double>> **arr) {
   std::ifstream file(fn);
   if (!file) {
     std::cout << "Could not open file: " << fn << std::endl;
@@ -47,6 +44,33 @@ void input::read2DVector(std::string fn,
   return;
 }
 
+void input::readVector(std::string fn, std::vector<double> **arr) {
+  std::ifstream file(fn);
+  if (!file) {
+    std::cout << "Could not open file: " << fn << std::endl;
+    return;
+  }
+  std::string line;
+  int count = 0;
+
+  while (getline(file, line)) {
+    count++;
+  }
+  file.clear();
+  file.seekg(0);
+
+  *arr = new std::vector<double>(count);
+
+  int i = 0;
+  while (getline(file, line)) {
+    std::stringstream ss(line);
+    ss >> (*arr)->at(i);
+    i++;
+  }
+  file.close();
+  return;
+}
+
 void input::gatherData(std::string dataPath, int &num_atoms,
                        std::vector<int> **elements, std::vector<double> **eri,
                        std::vector<std::vector<double>> **coords,
@@ -66,11 +90,18 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   input::readGeometry(geom, num_atoms, elements, coords);
   std::cout << "Number of atoms: " << num_atoms << std::endl;
   input::printElements(*elements);
-  input::print2dVector(*coords);
+  input::printVector(*coords);
 
   // Gathering T, V, e1, overlap
-  input::read2DVector(TFN, T);
-  input::print2dVector(*T);
+  input::readVector(TFN, T);
+  /* input::printVector(*T); */
+  input::readVector(VFN, V);
+  /* input::printVector(*V); */
+  input::readVector(e1FN, e1);
+  /* input::printVector(*e1); */
+  input::readVector(overlapFN, overlap);
+  input::readVector(eriFN, eri);
+  printVector(*eri);
 }
 
 void input::numAtoms(std::string filename, int &num_atoms) {
@@ -114,7 +145,7 @@ void input::readGeometry(std::string filename, int &num_atoms,
   return;
 }
 
-void input::print2dVector(std::vector<std::vector<double>> *matrix) {
+void input::printVector(std::vector<std::vector<double>> *matrix) {
   std::cout << std::endl;
   for (int i = 0; u_int64_t(i) < matrix->size(); ++i) {
     for (int j = 0; u_int64_t(j) < matrix->at(i).size(); ++j) {
@@ -122,6 +153,15 @@ void input::print2dVector(std::vector<std::vector<double>> *matrix) {
       std::cout << matrix->at(i).at(j) << " ";
     }
     std::cout << std::endl;
+  }
+  std::cout << std::endl;
+}
+
+void input::printVector(std::vector<double> *matrix) {
+  std::cout << std::endl;
+  for (int i = 0; u_int64_t(i) < matrix->size(); ++i) {
+      std::cout.precision(12);
+      std::cout << matrix->at(i) << " ";
   }
   std::cout << std::endl;
 }
