@@ -12,6 +12,20 @@ void showHello();
 /*                   std::vector<double> &x_coords, std::vector<double>
  * &y_coords, */
 /*                   std::vector<double> &z_coords); */
+void gatherData(std::string,
+        int &,
+        std::vector<int> **,
+                std::vector<double> **,
+                std::vector<std::vector<double>> **,
+                std::vector<std::vector<double>> **,
+                std::vector<std::vector<double>> **,
+                std::vector<std::vector<double>> **,
+                std::vector<std::vector<double>> **
+
+);
+
+void read2DVector(std::string, std::vector<std::vector<double>> **);
+
 void readGeometry(std::string, int &, std::vector<int> **,
                   std::vector<std::vector<double>> **);
 

@@ -8,19 +8,28 @@
 int main() {
   printf("Start\n");
 
-  std::string filename = "data/water.xyz";
-  /* std::vector<std::vector<double>> *coords; */
+  std::string dataPath = "data";
+  std::string geom = "data/geom.xyz";
+  std::string eriFN = "data/eri.dat";
+  std::string TFN = "data/T.dat";
+  std::string VFN = "data/V.dat";
+  std::string e1FN = "data/e1.dat";
+  std::string overlapFN = "data/overlap.dat";
 
-  std::vector<int> *elements = nullptr;
-  std::vector<std::vector<double>> *coords = nullptr;
   int num_atoms;
-  printf("Reading geometry...\n");
-  input::readGeometry(filename, num_atoms, &elements, &coords);
-  std::cout << "Number of atoms: " << num_atoms << std::endl;
-  input::printElements(elements);
-  input::print2dVector(coords);
-  free(elements);
-  printf("\nEnd\n");
+  std::vector<int> *elements = nullptr;
+  std::vector<double> *eri = nullptr;
+  std::vector<std::vector<double>> *coords = nullptr;
+  std::vector<std::vector<double>> *T = nullptr;
+  std::vector<std::vector<double>> *V = nullptr;
+  std::vector<std::vector<double>> *e1 = nullptr;
+  std::vector<std::vector<double>> *S = nullptr;
+  /* input::readGeometry(geom, num_atoms, &elements, &coords); */
+  input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &e1,
+                    &S);
 
+  free(elements);
+  free(coords);
+  printf("\nEnd\n");
   return 0;
 }
