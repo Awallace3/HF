@@ -14,14 +14,20 @@ int main() {
   int num_atoms;
   std::vector<int> *elements = nullptr;
   std::vector<double> *eri = nullptr;
-  std::vector<std::vector<double>> *coords = nullptr;
-  std::vector<std::vector<double>> *T = nullptr;
-  std::vector<std::vector<double>> *V = nullptr;
-  std::vector<std::vector<double>> *e1 = nullptr;
-  std::vector<std::vector<double>> *S = nullptr;
-  Eigen::MatrixXd *S_eigen = nullptr;
+  /* std::vector<std::vector<double>> *coords = nullptr; */
+  /* std::vector<std::vector<double>> *T = nullptr; */
+  /* std::vector<std::vector<double>> *V = nullptr; */
+  /* std::vector<std::vector<double>> *e1 = nullptr; */
+  /* std::vector<std::vector<double>> *S = nullptr; */
 
+  Eigen::MatrixXd *coords = nullptr;
+  Eigen::MatrixXd *T = nullptr;
+  Eigen::MatrixXd *V = nullptr;
+  Eigen::MatrixXd *e1 = nullptr;
+  Eigen::MatrixXd *S = nullptr;
   // Read Data
+  /* input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &e1, */
+  /*                   &S); */
   input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &e1,
                     &S);
   printf("Read Data");

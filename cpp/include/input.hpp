@@ -4,6 +4,7 @@
 #include "stdio.h"
 #include <string>
 #include <vector>
+#include <Eigen/Dense>
 
 namespace input {
 void gatherData(std::string,
@@ -18,11 +19,26 @@ void gatherData(std::string,
 
 );
 
+void gatherData(std::string,
+        int &,
+        std::vector<int> **,
+                std::vector<double> **,
+                Eigen::MatrixXd **,
+                Eigen::MatrixXd **,
+                Eigen::MatrixXd **,
+                Eigen::MatrixXd **,
+                Eigen::MatrixXd **
+
+);
+
 void readVector(std::string, std::vector<std::vector<double>> **);
 void readVector(std::string, std::vector<double> **);
+void readVector(std::string, Eigen::MatrixXd **);
 
 void readGeometry(std::string, int &, std::vector<int> **,
                   std::vector<std::vector<double>> **);
+void readGeometry(std::string, int &, std::vector<int> **,
+                  Eigen::MatrixXd **);
 
 void numAtoms(std::string, int &);
 void printVector(std::vector<std::vector<double>> *);
