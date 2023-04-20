@@ -32,8 +32,9 @@ void gatherData(std::string,
 );
 
 void readVector(std::string, std::vector<std::vector<double>> **);
-void readVector(std::string, std::vector<double> **);
+void readVector(std::string, std::vector<double> **, int *);
 void readVector(std::string, Eigen::MatrixXd **);
+void readERI(std::string, std::vector<double> **);
 
 void readGeometry(std::string, int &, std::vector<int> **,
                   std::vector<std::vector<double>> **);

@@ -1,4 +1,5 @@
 #include "input.hpp"
+#include "helper.hpp"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -79,7 +80,36 @@ void input::readVector(std::string fn, Eigen::MatrixXd **arr) {
   file.close();
   return;
 }
-void input::readVector(std::string fn, std::vector<double> **arr) {
+void input::readVector(std::string fn, std::vector<double> **arr, int *num_electrons) {
+    // TODO: need to read ERI into Nx4 matrix and use IJKL
+    // indexing to build eri reduced matrix
+  std::ifstream file(fn);
+  if (!file) {
+    std::cout << "Could not open file: " << fn << std::endl;
+    return;
+  }
+  std::string line;
+  int count = 0;
+
+  while (getline(file, line)) {
+    count++;
+  }
+  file.clear();
+  file.seekg(0);
+
+  *arr = new std::vector<double>(count);
+
+  int i = 0;
+  while (getline(file, line)) {
+    std::stringstream ss(line);
+    ss >> (*arr)->at(i);
+    i++;
+  }
+  file.close();
+  return;
+}
+
+void input::readERI(std::string fn, std::vector<double> **arr) {
   std::ifstream file(fn);
   if (!file) {
     std::cout << "Could not open file: " << fn << std::endl;
@@ -135,8 +165,8 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   input::readVector(e1FN, e1);
   /* input::printVector(*e1); */
   input::readVector(overlapFN, overlap);
-  input::readVector(eriFN, eri);
-  printVector(*eri);
+  input::readERI(eriFN, eri);
+  /* printVector(*eri); */
 }
 
 void input::gatherData(std::string dataPath, int &num_atoms,
@@ -168,7 +198,8 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   input::readVector(overlapFN, overlap);
 
   // Gathering eri
-  input::readVector(eriFN, eri);
+  /* input::readVector(eriFN, eri); */
+  input::readERI(eriFN, eri);
 }
 
 void input::numAtoms(std::string filename, int &num_atoms) {

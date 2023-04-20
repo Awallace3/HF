@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <vector>
 
+
 void helper::orthoBasisSet(Eigen::MatrixXd *S, Eigen::MatrixXd *X) {
   // Diagonalize S
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(*S);
@@ -15,13 +16,10 @@ void helper::orthoBasisSet(Eigen::MatrixXd *S, Eigen::MatrixXd *X) {
   *X = U * D * U.transpose();
 }
 
-void helper::initialFockMatrix(Eigen::MatrixXd *S, Eigen::MatrixXd *H,
+void helper::initialFockMatrix(Eigen::MatrixXd *X, Eigen::MatrixXd *H,
                        Eigen::MatrixXd *F) {
-  // Calculate X
-  Eigen::MatrixXd X;
-  helper::orthoBasisSet(S, &X);
   // Calculate F
-  *F = X.transpose() * *H * X;
+  *F = (*X).transpose() * *H * (*X);
 }
 
 void helper::CMatrix(Eigen::MatrixXd *F, Eigen::MatrixXd *C) {
@@ -57,4 +55,19 @@ int helper::indexIJKL(int i, int j, int k, int l) {
   int kl = k * (k + 1) / 2 + l;
   int ijkl = ij * (ij + 1) / 2 + kl;
   return ijkl;
+}
+
+void helper::initialDensityMatrix(Eigen::MatrixXd *C, Eigen::MatrixXd *D, int num_electrons) {
+  // Calculate D
+  *D = C->block(0, 0, C->rows(), num_electrons / 2);
+  *D = *D * D->transpose();
+}
+
+// TODO: finish this function
+void eriReducedCalc(std::vector<double> *eri, std::vector<double> *eriReduced){
+    for (int i =0; i < eri->size(); i++){
+        /* ijkl = indexIJKL(ijkl); */
+        eriReduced->at(eri->at(i));
+    }
+
 }
