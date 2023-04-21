@@ -7,17 +7,18 @@
 using namespace Eigen;
 using namespace std;
 
-void helper::orthoS(Eigen::MatrixXd *S, Eigen::MatrixXd *X) {
+void helper::orthoS(Eigen::MatrixXd *S, Eigen::MatrixXd *S12) {
   // Diagonalize S
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(*S);
-  Eigen::MatrixXd D = es.eigenvalues().asDiagonal();
+  /* Eigen::MatrixXd D = es.eigenvalues().asDiagonal(); */
+  Eigen::MatrixXd LAMBDA = es.eigenvalues().asDiagonal();
   Eigen::MatrixXd U = es.eigenvectors();
   // Invert D
-  for (int i = 0; i < D.rows(); i++) {
-    D(i, i) = 1 / sqrt(D(i, i));
+  for (int i = 0; i < LAMBDA.rows(); i++) {
+    LAMBDA(i, i) = 1 / sqrt(LAMBDA(i, i));
   }
   // Calculate X
-  *X = U * D * U.transpose();
+  *S12 = U * LAMBDA * U.transpose();
 }
 
 void helper::initialFockMatrix(Eigen::MatrixXd *X, Eigen::MatrixXd *H,
@@ -31,10 +32,7 @@ void helper::getC_0_prime(Eigen::MatrixXd *F, Eigen::MatrixXd *C) {
   SelfAdjointEigenSolver<MatrixXd> eigensolver(*F);
   if (eigensolver.info() != Success)
     abort(); // check for errors
-
-  VectorXd D = eigensolver.eigenvalues();    // get the eigenvalues
-  /* *C = eigensolver.eigenvectors().inverse(); // get the eigenvalues */
-  *C = eigensolver.eigenvectors(); // get the eigenvalues
+  *C = eigensolver.eigenvectors();
 }
 
 void helper::computeEnergy(Eigen::MatrixXd *D, Eigen::MatrixXd *H,
@@ -79,8 +77,14 @@ int helper::indexIJKL(int i, int j, int k, int l) {
 void helper::updateDensityMatrix(Eigen::MatrixXd *C, Eigen::MatrixXd *D,
                                  int num_electrons) {
   // Calculate D
-  *D = C->block(0, 0, C->rows(), num_electrons / 2);
-  *D = *D * D->transpose();
+    for (int i = 0; i < C->rows(); i++) {
+      for (int j = 0; j < C->rows(); j++) {
+        (*D)(i, j) = 0;
+        for (int k = 0; k < num_electrons / 2; k++) {
+          (*D)(i, j) += (*C)(i, k) * (*C)(j, k);
+        }
+      }
+    }
 }
 
 // TODO: finish this function
@@ -123,8 +127,8 @@ void helper::SCF(std::vector<double> *eri, Eigen::MatrixXd *S_12,
     helper::updateFockMatrix(H, D, F, eri);
     /* cout << endl <<"F Matrix: " << endl << endl <<*F << endl; */
     /* cout << endl <<"E: " << endl << endl <<*E << endl; */
-    *F = (*S_12).transpose() * *F * (*S_12);
     helper::computeEnergy(D, H, F, E);
+    *F = (*S_12).transpose() * *F * (*S_12);
 
     helper::getC_0_prime(F, C_0_prime);
     /* cout << endl <<"C_0_prime Matrix: " << endl <<endl << *C_0_prime << endl;
