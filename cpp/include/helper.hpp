@@ -36,7 +36,7 @@ void SCF(std::vector<double> *eri,
                  Eigen::MatrixXd *C, Eigen::MatrixXd *D,
                  Eigen::MatrixXd *C_0_prime,
                  int num_electrons,
-                 double E, double e_nuc, double t1, double t2);
+                 double *E, double e_nuc, double t1, double t2);
 
 } // namespace helper
 #endif

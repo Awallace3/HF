@@ -55,6 +55,24 @@ def parse_input(path):
     return vs, size
 
 
+def parse_input_cpp(path):
+    with open(path, "r") as fp:
+        v = fp.readlines()
+        size = len(v)
+        vs = np.zeros((size, size))
+    for i in range(len(v)):
+        l = v[i].rstrip()
+        while "  " in l:
+            l = l.replace("  ", " ")
+        if l[0] == " ":
+            l = l[1:].split(" ")  # first spot is whitespace
+        else:
+            l = l.split(" ")
+        for j in range(len(l)):
+            vs[i, j] = float(l[j])
+    return vs, size
+
+
 def read_inputs(input_dir):
     with open("%s/enuc.dat" % input_dir, "r") as fp:
         enuc = float(fp.read().rstrip())
@@ -64,7 +82,21 @@ def read_inputs(input_dir):
     if l2 != l3:
         print("T and V have different lengths. Fix your input files.")
         sys.exit()
+    return enuc, s, t, v, l2
 
+
+def read_inputs_cpp(input_dir):
+    with open("%s/enuc.dat" % input_dir, "r") as fp:
+        enuc = float(fp.read().rstrip())
+    s, l1 = parse_input_cpp("%s/overlap.dat" % input_dir)
+    t, l2 = parse_input_cpp("%s/T.dat" % input_dir)
+    v, l3 = parse_input_cpp("%s/V.dat" % input_dir)
+    print('read')
+    print(s, t, v, sep="\n\n")
+
+    if l2 != l3:
+        print("T and V have different lengths. Fix your input files.")
+        sys.exit()
     return enuc, s, t, v, l2
 
 
@@ -171,7 +203,7 @@ def read_two_e_repulsion(input_dir, size):
 
     eri = np.genfromtxt("%s/eri.dat" % input_dir)
     # M = ( 4 * size)
-    M = (size) ** 2
+    M = (size)**2
     one_d_size = int(M * (M + 1) / 2)
     eri_vals = np.zeros((one_d_size))
     for row in eri:
@@ -221,12 +253,11 @@ def rms_Density_Matrix(D_new, D_old):
     for mu in s:
         for nu in s:
             val += math.pow((D_new[mu, nu] - D_old[mu, nu]), 2)
-    return val ** (1 / 2)
+    return val**(1 / 2)
 
 
-def self_consistent_field_iteration(
-    H, D_0, symm_orth, eri, e, enuc, E_0_elec, size, thres1, thres2
-):
+def self_consistent_field_iteration(H, D_0, symm_orth, eri, e, enuc, E_0_elec,
+                                    size, thres1, thres2):
 
     iterations = 1
     D_old = D_0
@@ -271,12 +302,15 @@ def self_consistent_field_iteration(
 
 def main():
     input_dir = "input/h2o/STO-3G"
+    input_dir = "../cpp/data"
     # input_dir = "input/h2o/DZ"
     e = 10
     thres1 = 1e-11
     thres2 = 1e-11
 
-    enuc, s, t, v, size = read_inputs(input_dir)
+    # enuc, s, t, v, size = read_inputs(input_dir)
+    enuc, s, t, v, size = read_inputs_cpp(input_dir)
+
     print("enuc", enuc)
     # Core Hamiltonian matrix, H
     H = np.add(t, v)
@@ -302,9 +336,8 @@ def main():
     C_0 = np.matmul(symm_orth, C_0_prime)
 
     print("\nC_0")
-    print_2d_array(
-        C_0, size
-    )  # brent said sign doesn't matter here so try next
+    print_2d_array(C_0,
+                   size)  # brent said sign doesn't matter here so try next
     # III. 4
     D_0 = Density_Matrix(C_0, e)
     print("\nD_0")
@@ -319,9 +352,8 @@ def main():
     print("Size", size)
     eri = read_two_e_repulsion(input_dir, size)
 
-    self_consistent_field_iteration(
-        H, D_0, symm_orth, eri, e, enuc, E_0_elec, size, thres1, thres2
-    )
+    self_consistent_field_iteration(H, D_0, symm_orth, eri, e, enuc, E_0_elec,
+                                    size, thres1, thres2)
 
 
 if __name__ == "__main__":

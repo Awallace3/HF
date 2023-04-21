@@ -78,8 +78,10 @@ int main() {
 
   helper::SCF(
           eri,
-          S_12, H, F, C, D, C_0_prime, num_electrons, E, e_nuc, t1, t2
+          S_12, H, F, C, D, C_0_prime, num_electrons, &E, e_nuc, t1, t2
           );
+  E += e_nuc;
+  cout << endl << "Final HF Energy: " << E  << endl;
 
   // E_0_elec -125.84207743769902
 
@@ -91,6 +93,10 @@ int main() {
   free(e1);
   free(S);
   free(eri);
+  /* free(C); */
+  /* free(C_0_prime); */
+  /* free(D); */
+  /* free(S_12); */
   printf("\nFreed Memory\n");
   return 0;
 }
