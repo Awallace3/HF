@@ -1,9 +1,13 @@
 #include "helper.hpp"
+#include "stdio.h"
 #include <Eigen/Dense>
+#include <iostream>
 #include <vector>
 
+using namespace Eigen;
+using namespace std;
 
-void helper::orthoBasisSet(Eigen::MatrixXd *S, Eigen::MatrixXd *X) {
+void helper::orthoS(Eigen::MatrixXd *S, Eigen::MatrixXd *X) {
   // Diagonalize S
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(*S);
   Eigen::MatrixXd D = es.eigenvalues().asDiagonal();
@@ -17,28 +21,36 @@ void helper::orthoBasisSet(Eigen::MatrixXd *S, Eigen::MatrixXd *X) {
 }
 
 void helper::initialFockMatrix(Eigen::MatrixXd *X, Eigen::MatrixXd *H,
-                       Eigen::MatrixXd *F) {
+                               Eigen::MatrixXd *F) {
   // Calculate F
   *F = (*X).transpose() * *H * (*X);
 }
 
-void helper::CMatrix(Eigen::MatrixXd *F, Eigen::MatrixXd *C) {
+void helper::getC_0_prime(Eigen::MatrixXd *F, Eigen::MatrixXd *C) {
   // Diagonalize F
-  Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(*F);
-  Eigen::MatrixXd D = es.eigenvalues().asDiagonal();
-  Eigen::MatrixXd U = es.eigenvectors();
-  // Calculate C
-  *C = U * D * U.transpose();
+  SelfAdjointEigenSolver<MatrixXd> eigensolver(*F);
+  if (eigensolver.info() != Success)
+    abort(); // check for errors
+
+  VectorXd D = eigensolver.eigenvalues();         // get the eigenvalues
+  *C = eigensolver.eigenvectors().inverse(); // get the eigenvalues
 }
 
-void helper::initialEnergy(Eigen::MatrixXd *P, Eigen::MatrixXd *H, Eigen::MatrixXd *F,
-                   double *E) {
+void helper::computeEnergy(Eigen::MatrixXd *D, Eigen::MatrixXd *H,
+                           Eigen::MatrixXd *F, double *E) {
   // Calculate E
-  *E = (0.5 * P->transpose() * (*H + *F)).sum();
+  // TODO: fix this
+  *E = 0;
+  for (int i = 0; i < H->rows(); i++) {
+    for (int j = 0; j < H->rows(); j++) {
+        *E += (*D)(i,j) * ( (*H)(i,j) + (*F)(i,j));
+    }
+  }
+    /* *E = (*D * ( (*H) + (*E))); */
 }
 
 void helper::getNumberOfElectrons(int num_atoms, std::vector<int> *elements,
-                          int *num_electrons) {
+                                  int *num_electrons) {
   // Calculate number of electrons
   *num_electrons = 0;
   for (int i = 0; i < num_atoms; i++) {
@@ -47,27 +59,84 @@ void helper::getNumberOfElectrons(int num_atoms, std::vector<int> *elements,
 }
 
 int helper::indexIJKL(int i, int j, int k, int l) {
-  if (i > j)
+  if (j > i)
     std::swap(i, j);
-  if (k > l)
+  if (l > k)
     std::swap(k, l);
   int ij = i * (i + 1) / 2 + j;
   int kl = k * (k + 1) / 2 + l;
+  if (ij < kl)
+    std::swap(ij, kl);
   int ijkl = ij * (ij + 1) / 2 + kl;
   return ijkl;
 }
 
-void helper::initialDensityMatrix(Eigen::MatrixXd *C, Eigen::MatrixXd *D, int num_electrons) {
+void helper::updateDensityMatrix(Eigen::MatrixXd *C, Eigen::MatrixXd *D,
+                                 int num_electrons) {
   // Calculate D
   *D = C->block(0, 0, C->rows(), num_electrons / 2);
   *D = *D * D->transpose();
 }
 
 // TODO: finish this function
-void eriReducedCalc(std::vector<double> *eri, std::vector<double> *eriReduced){
-    for (int i =0; i < eri->size(); i++){
-        /* ijkl = indexIJKL(ijkl); */
-        eriReduced->at(eri->at(i));
-    }
+void helper::eriReducedCalc(std::vector<double> *eri,
+                            std::vector<double> *eriReduced) {
+  /* for (int i =0; i < eri->size(); i++){ */
+  /*     eriReduced->at(eri->at(i)); */
+  /* } */
+}
 
+void helper::updateFockMatrix(Eigen::MatrixXd *H, Eigen::MatrixXd *D,
+                              Eigen::MatrixXd *F, std::vector<double> *eri) {
+  // Update Fock Matrix
+  *F = *H;
+  for (int i = 0; i < H->rows(); i++) {
+    for (int j = 0; j < H->cols(); j++) {
+      for (int k = 0; k < H->rows(); k++) {
+        for (int l = 0; l < H->cols(); l++) {
+          (*F)(i, j) +=
+              (*D)(k, l) * (2 * eri->at(helper::indexIJKL(i, j, k, l)) -
+                            eri->at(helper::indexIJKL(i, k, j, l)));
+        }
+      }
+    }
+  }
+}
+
+void helper::SCF(std::vector<double> *eri, Eigen::MatrixXd *S_12,
+                 Eigen::MatrixXd *H, Eigen::MatrixXd *F, Eigen::MatrixXd *C,
+                 Eigen::MatrixXd *D, Eigen::MatrixXd *C_0_prime,
+                 int num_electrons, double E, double e_nuc, double t1, double t2) {
+  // Calculate SCF
+
+  bool converged = false;
+  double E2 = 0;
+  int iter = 0, max_iter = 10;
+  while (!converged) {
+    // Update Fock Matrix
+    helper::updateFockMatrix(H, D, F, eri);
+    /* cout << endl <<"F Matrix: " << endl << endl <<*F << endl; */
+    helper::computeEnergy(D, H, F, &E);
+    /* cout << endl <<"E: " << endl << endl <<*E << endl; */
+
+    helper::getC_0_prime(F, C_0_prime);
+    /* cout << endl <<"C_0_prime Matrix: " << endl <<endl << *C_0_prime << endl; */
+
+    *C = (*S_12) * (*C_0_prime);
+    /* cout << endl <<"C Matrix: " << endl <<endl << *C << endl; */
+    helper::updateDensityMatrix(C, D, num_electrons);
+    /* cout << endl <<"D Matrix: " << endl << endl <<*D << endl; */
+
+    cout << "iter: " << iter << " Energy: " << E << " " << E2 << endl;
+    if (abs(E - E2) < t1) {
+      converged = true;
+    } else if (iter > max_iter) {
+        cout << "Max iterations reached" << endl;
+      converged = true;
+    } else {
+        E2 = E;
+    }
+    iter++;
+    /* converged = true; */
+  }
 }

@@ -1,12 +1,14 @@
 #include "input.hpp"
 #include "helper.hpp"
+#include <Eigen/Dense>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <Eigen/Dense>
+
+using namespace std;
 
 void input::readVector(std::string fn, std::vector<std::vector<double>> **arr) {
   std::ifstream file(fn);
@@ -80,9 +82,9 @@ void input::readVector(std::string fn, Eigen::MatrixXd **arr) {
   file.close();
   return;
 }
-void input::readVector(std::string fn, std::vector<double> **arr, int *num_electrons) {
-    // TODO: need to read ERI into Nx4 matrix and use IJKL
-    // indexing to build eri reduced matrix
+void input::readVector(std::string fn, std::vector<double> **arr) {
+  // TODO: need to read ERI into Nx4 matrix and use IJKL
+  // indexing to build eri reduced matrix
   std::ifstream file(fn);
   if (!file) {
     std::cout << "Could not open file: " << fn << std::endl;
@@ -109,7 +111,7 @@ void input::readVector(std::string fn, std::vector<double> **arr, int *num_elect
   return;
 }
 
-void input::readERI(std::string fn, std::vector<double> **arr) {
+void input::readERI(std::string fn, std::vector<double> **arr, int n_basis) {
   std::ifstream file(fn);
   if (!file) {
     std::cout << "Could not open file: " << fn << std::endl;
@@ -123,14 +125,25 @@ void input::readERI(std::string fn, std::vector<double> **arr) {
   }
   file.clear();
   file.seekg(0);
+  /* int arrSize = */
+  /*     n_basis * (n_basis + 1) / 2  * (n_basis + 2) / 2 * (n_basis + 3) / 2; */
+  /*  */
+  /*  */
+  /* cout << "arrSize: " << arrSize << endl; */
+  /* cout << "count: " << count << endl; */
 
   *arr = new std::vector<double>(count);
 
-  int i = 0;
+  int i, j, k, l;
+  double value;
+  int ijkl;
   while (getline(file, line)) {
     std::stringstream ss(line);
-    ss >> (*arr)->at(i);
-    i++;
+    ss >> i >> j >> k >> l >> value;
+    ijkl = helper::indexIJKL(i, j, k, l);
+    /* std::cout << ijkl << " " << i << " " << j << " " << k << " " << l << " " */
+    /*           << value << std::endl; */
+    (*arr)->at(ijkl) = value;
   }
   file.close();
   return;
@@ -165,19 +178,16 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   input::readVector(e1FN, e1);
   /* input::printVector(*e1); */
   input::readVector(overlapFN, overlap);
-  input::readERI(eriFN, eri);
+  input::readVector(eriFN, eri);
   /* printVector(*eri); */
+
 }
 
 void input::gatherData(std::string dataPath, int &num_atoms,
-                       std::vector<int> **elements,
-                       std::vector<double> **eri,
-                       Eigen::MatrixXd **coords,
-                       Eigen::MatrixXd **T,
-                       Eigen::MatrixXd **V,
-                       Eigen::MatrixXd **e1,
-                       Eigen::MatrixXd **overlap
-
+                       std::vector<int> **elements, std::vector<double> **eri,
+                       Eigen::MatrixXd **coords, Eigen::MatrixXd **T,
+                       Eigen::MatrixXd **V, Eigen::MatrixXd **e1,
+                       Eigen::MatrixXd **overlap, double *enuc
 ) {
   std::string geom = dataPath + "/geom.xyz";
   std::string eriFN = dataPath + "/eri.dat";
@@ -185,6 +195,7 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   std::string VFN = dataPath + "/V.dat";
   std::string e1FN = dataPath + "/e1.dat";
   std::string overlapFN = dataPath + "/overlap.dat";
+  std::string enucFN = dataPath + "/enuc.dat";
   // Gathering Geometry
   input::readGeometry(geom, num_atoms, elements, coords);
   /* std::cout << "Number of atoms: " << num_atoms << std::endl; */
@@ -197,9 +208,13 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   input::readVector(e1FN, e1);
   input::readVector(overlapFN, overlap);
 
+
   // Gathering eri
   /* input::readVector(eriFN, eri); */
-  input::readERI(eriFN, eri);
+  int n_basis = (*T)->rows();
+  cout << "n_basis: " << n_basis << endl;
+  input::readERI(eriFN, eri, n_basis);
+  input::readNumber(enucFN, *enuc);
 }
 
 void input::numAtoms(std::string filename, int &num_atoms) {
@@ -287,8 +302,8 @@ void input::printVector(std::vector<std::vector<double>> *matrix) {
 void input::printVector(std::vector<double> *matrix) {
   std::cout << std::endl;
   for (int i = 0; u_int64_t(i) < matrix->size(); ++i) {
-      std::cout.precision(12);
-      std::cout << matrix->at(i) << " ";
+    std::cout.precision(12);
+    std::cout << matrix->at(i) << " ";
   }
   std::cout << std::endl;
 }
@@ -298,4 +313,14 @@ void input::printElements(std::vector<int> *matrix) {
     std::cout << matrix->at(i) << " ";
     std::cout << std::endl;
   }
+}
+
+void input::readNumber(std::string filename, double &number) {
+  std::ifstream file(filename);
+  if (!file) {
+    std::cout << "Could not open file " << filename << std::endl;
+    return;
+  }
+  file >> number;
+  file.close();
 }

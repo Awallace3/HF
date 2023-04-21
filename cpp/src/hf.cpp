@@ -1,3 +1,4 @@
+#include "helper.hpp"
 #include "input.hpp"
 #include "stdio.h"
 #include <Eigen/Dense>
@@ -5,16 +6,19 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "helper.hpp"
 
 using namespace std;
 
 int main() {
   // Specify Data Path
   std::string dataPath = "data";
+  double t1 = 1e-8, t2 = 1e-8;
+
+  //
 
   // Make pointers to store input data
   int num_atoms;
+  double E = 0, e_nuc = 0;
   std::vector<int> *elements = nullptr;
   std::vector<double> *eri = nullptr;
 
@@ -26,60 +30,58 @@ int main() {
 
   // Read Data
   input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &e1,
-                    &S);
+                    &S, &e_nuc);
 
   // Starting HF Code
 
   // Allocate Memory for Matrices
   Eigen::MatrixXd *H = nullptr;
-  Eigen::MatrixXd *X = nullptr;
+  Eigen::MatrixXd *S_12 = nullptr;
   Eigen::MatrixXd *F = nullptr;
   Eigen::MatrixXd *C = nullptr;
+  Eigen::MatrixXd *C_0_prime = nullptr;
   Eigen::MatrixXd *D = nullptr;
 
   // Allocate memory for energy and electron count
   int num_electrons;
-  double energy = 0;
-  int eriSize;
+  /* int eriSize; */
 
   // Set Number of Electrons for a Neutral Molecule
   helper::getNumberOfElectrons(num_atoms, elements, &num_electrons);
 
   H = new Eigen::MatrixXd(T->rows(), T->cols());
-  *H = *T + *V + *e1;
-  /* cout << "H Matrix: " << endl << *H << endl; */
+  *H = *T + *V;
+  /* *H = *T + *V + *e1; */
+  cout << endl << "H Matrix: " << endl << endl << *H << endl;
 
   // Orthogonalize Basis Set
-  X = new Eigen::MatrixXd(S->rows(), S->cols());
-  helper::orthoBasisSet(S, X);
-  /* cout << "X Matrix: " << endl << *X << endl; */
+  S_12 = new Eigen::MatrixXd(S->rows(), S->cols());
+  helper::orthoS(S, S_12);
+  cout << endl << "S_12 Matrix: " << endl << endl << *S_12 << endl;
 
   // Build initial Fock Matrix
   F = new Eigen::MatrixXd(H->rows(), H->cols());
-  /* helper::initialFockMatrix(S, H, F); */
-  *F = (*X).transpose() * *H * (*X);
-  cout << "F Matrix: " << endl << *F << endl;
+  *F = (*S_12).transpose() * *H * (*S_12);
+  cout << endl << "F Matrix: " << endl << endl << *F << endl;
+
+  C_0_prime = new Eigen::MatrixXd(H->rows(), H->cols());
+  helper::getC_0_prime(F, C_0_prime);
+  cout << endl << "C_0_prime Matrix: " << endl << endl << *C_0_prime << endl;
 
   C = new Eigen::MatrixXd(H->rows(), H->cols());
-  helper::CMatrix(F, C);
-  /* cout << "C Matrix: " << endl << *C << endl; */
-
+  *C = (*S_12) * (*C_0_prime);
+  cout << endl << "C Matrix: " << endl << endl << *C << endl;
 
   D = new Eigen::MatrixXd(H->rows(), H->cols());
-  helper::initialDensityMatrix(C, D, num_electrons);
-  cout << "D Matrix: " << endl << *D << endl;
+  helper::updateDensityMatrix(C, D, num_electrons);
+  cout << endl << "D Matrix: " << endl << endl << *D << endl;
 
-  helper::initialEnergy(D, H, F, &energy);
-  cout << "Energy: " << energy << endl;
+  helper::SCF(
+          eri,
+          S_12, H, F, C, D, C_0_prime, num_electrons, E, e_nuc, t1, t2
+          );
 
-  std::vector<double> *eri2 = nullptr;
-  eriSize = H->rows() * H->cols() * H->rows() * H->cols();
-  eri2 = new std::vector<double>(eriSize);
-  /* helper::eriReducedCalc(eri, eri2); */
-
-
-
-
+  // E_0_elec -125.84207743769902
 
   // Free Allocations
   free(elements);

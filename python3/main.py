@@ -96,6 +96,7 @@ def C_prime_gen(F):
     epsilon, C_prime = np.linalg.eig(F)
     idx = np.argsort(epsilon)
     epsilon = epsilon[idx]
+    # print(epsilon)
     C_prime = C_prime[:, idx]
     return C_prime
 
@@ -193,9 +194,6 @@ def read_two_e_repulsion(input_dir, size):
 
 
 def new_Fock_Matrix(H, D, eri, size):
-    e = 10
-    occ = range(5)
-
     s = range(size)
     F = np.zeros(np.shape(H))
     for i in s:
@@ -279,6 +277,7 @@ def main():
     thres2 = 1e-11
 
     enuc, s, t, v, size = read_inputs(input_dir)
+    print("enuc", enuc)
     # Core Hamiltonian matrix, H
     H = np.add(t, v)
     print("\nH")
