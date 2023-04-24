@@ -37,7 +37,6 @@ cpp/build
 cpp_og
 cpp/hf
 cpp/compile_commands.json
-cpp/hf
 schr.pkl
 psi4/schr.pkl
 psi4/timer.dat

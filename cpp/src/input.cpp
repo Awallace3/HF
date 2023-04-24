@@ -125,12 +125,15 @@ void input::readERI(std::string fn, std::vector<double> **arr, int n_basis) {
   }
   file.clear();
   file.seekg(0);
-  /* int arrSize = */
-  /*     n_basis * (n_basis + 1) / 2  * (n_basis + 2) / 2 * (n_basis + 3) / 2; */
-  /*  */
-  /*  */
-  /* cout << "arrSize: " << arrSize << endl; */
-  /* cout << "count: " << count << endl; */
+  int arrSize =
+      /* n_basis * (n_basis + 1) / 2  * (n_basis + 2) / 2 * (n_basis  + 3) / 2 ;
+       */
+      /* n_basis * n_basis * n_basis * n_basis / 8; */
+      /* helper::indexIJKL(n_basis, n_basis, n_basis, n_basis); */
+      helper::indexIJKL(n_basis - 1, n_basis - 1, n_basis - 1, n_basis - 1) + 1;
+
+  cout << "arrSize: " << arrSize << endl;
+  cout << "count: " << count << endl;
 
   *arr = new std::vector<double>(count);
 
@@ -141,7 +144,8 @@ void input::readERI(std::string fn, std::vector<double> **arr, int n_basis) {
     std::stringstream ss(line);
     ss >> i >> j >> k >> l >> value;
     ijkl = helper::indexIJKL(i, j, k, l);
-    /* std::cout << ijkl << " " << i << " " << j << " " << k << " " << l << " " */
+    /* std::cout << ijkl << " " << i << " " << j << " " << k << " " << l << " "
+     */
     /*           << value << std::endl; */
     (*arr)->at(ijkl) = value;
   }
@@ -180,15 +184,13 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   input::readVector(overlapFN, overlap);
   input::readVector(eriFN, eri);
   /* printVector(*eri); */
-
 }
 
 void input::gatherData(std::string dataPath, int &num_atoms,
                        std::vector<int> **elements, std::vector<double> **eri,
                        Eigen::MatrixXd **coords, Eigen::MatrixXd **T,
                        Eigen::MatrixXd **V, Eigen::MatrixXd **e1,
-                       Eigen::MatrixXd **overlap, double *enuc
-) {
+                       Eigen::MatrixXd **overlap, double *enuc) {
   std::string geom = dataPath + "/geom.xyz";
   std::string eriFN = dataPath + "/eri.dat";
   std::string TFN = dataPath + "/T.dat";
@@ -207,7 +209,6 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   input::readVector(VFN, V);
   input::readVector(e1FN, e1);
   input::readVector(overlapFN, overlap);
-
 
   // Gathering eri
   /* input::readVector(eriFN, eri); */
