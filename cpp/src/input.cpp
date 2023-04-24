@@ -193,7 +193,7 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   std::string TFN = dataPath + "/T.csv";
   std::string VFN = dataPath + "/V.csv";
   std::string overlapFN = dataPath + "/S.csv";
-  std::string enucFN = dataPath + "/enuc.csv";
+  std::string enucFN = dataPath + "/enuc.dat";
   // Gathering Geometry
   input::readGeometry(geom, num_atoms, elements, coords);
 

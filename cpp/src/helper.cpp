@@ -13,6 +13,9 @@ void helper::orthoS(Eigen::MatrixXd *S, Eigen::MatrixXd *S12) {
   Eigen::MatrixXd LAMBDA = es.eigenvalues().asDiagonal();
   Eigen::MatrixXd U = es.eigenvectors();
   // Invert D
+
+  // TOOD: Parallelize
+/* #pragma omp parallel for */
   for (int i = 0; i < LAMBDA.rows(); i++) {
     LAMBDA(i, i) = 1 / sqrt(LAMBDA(i, i));
   }
@@ -45,12 +48,9 @@ void helper::getNumberOfElectrons(int num_atoms, std::vector<int> *elements,
                                   int *num_electrons) {
   // Calculate number of electrons
   *num_electrons = 0;
-  /* int sum = 0; */
-/* #pragma omp parallel for reduction(+ : sum) */
   for (int i = 0; i < num_atoms; i++) {
-    num_electrons += elements->at(i);
+    *num_electrons += elements->at(i);
   }
-  /* *num_electrons = sum; */
 }
 
 int helper::indexIJKL(int i, int j, int k, int l) {
@@ -72,6 +72,7 @@ int helper::indexIJKL(int i, int j, int k, int l) {
 void helper::updateDensityMatrix(Eigen::MatrixXd *C, Eigen::MatrixXd *D,
                                  int num_electrons) {
   // Calculate D
+  // TODO: Parallelize
   for (int i = 0; i < C->rows(); i++) {
     for (int j = 0; j < C->rows(); j++) {
       (*D)(i, j) = 0;
