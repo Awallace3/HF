@@ -11,12 +11,21 @@
 
 using namespace std;
 
-void serial() {
-  // Specify Data Path
-  std::string dataPath = "data";
-  double t1 = 1e-8, t2 = 1e-8;
+void collectInputData(
+        std::string dataPath,
+        vector<int> *elements, vector<double> *eri,
+                      Eigen::MatrixXd *coords, Eigen::MatrixXd *T,
+                      Eigen::MatrixXd *V,
+                      Eigen::MatrixXd *S) {
 
-  //
+}
+
+
+void HF() {
+  // Specify Data Path
+  /* std::string dataPath = "data/t1"; */
+  std::string dataPath = "data/t0";
+  double t1 = 1e-8, t2 = 1e-8;
 
   // Make pointers to store input data
   int num_atoms;
@@ -36,7 +45,6 @@ void serial() {
   cout << "e_nuc: " << e_nuc << endl;
 
   // Starting HF Code
-
   // Allocate Memory for Matrices
   Eigen::MatrixXd *H = nullptr;
   Eigen::MatrixXd *S_12 = nullptr;
@@ -54,10 +62,9 @@ void serial() {
 
   H = new Eigen::MatrixXd(T->rows(), T->cols());
   *H = *T + *V;
-  /* *H = *T + *V + *e1; */
   cout << endl << "H Matrix: " << endl << endl << *H << endl;
 
-  // Orthogonalize Basis Set
+  // Orthogonalization of S
   cout << endl << "S Matrix: " << endl << endl << *S << endl;
   S_12 = new Eigen::MatrixXd(S->rows(), S->cols());
   helper::orthoS(S, S_12);
@@ -83,9 +90,11 @@ void serial() {
   helper::SCF(eri, S_12, H, F, C, D, C_0_prime, num_electrons, &E, e_nuc, t1,
               t2);
   E += e_nuc;
+  cout.precision(15);
   cout << endl << "Final HF Energy: " << E << endl;
 
-  // E_0_elec -125.84207743769902
+  // Final HF Energy:   -74.9659010585405
+  // Total Energy =     -74.9659900701199433
 
   // Free Allocations
   free(elements);
@@ -95,10 +104,6 @@ void serial() {
   free(e1);
   free(S);
   free(eri);
-  /* free(C); */
-  /* free(C_0_prime); */
-  /* free(D); */
-  /* free(S_12); */
   printf("\nFreed Memory\n");
 }
 
@@ -108,21 +113,20 @@ int main() {
   time_t start, end;
   double serial_t;
   start = clock();
-  serial();
+  HF();
   end = clock();
   serial_t = (double)(end - start);
   cout << "Serial Time: " << (serial_t / CLOCKS_PER_SEC) << endl;
-  /* double omp_t; */
-  /* int num_threads = 4; */
-  /* omp_set_num_threads(num_threads); */
-  /* Eigen::setNbThreads(num_threads); */
-  /* start = clock(); */
-  /* serial(); */
-  /* end = clock(); */
-  /* omp_t = (double)(end - start); */
-  /* cout << "Omp Time: " << (double) (omp_t / CLOCKS_PER_SEC) << endl; */
-  /* cout << "Omp Speedup: " << (double)(serial_t / omp_t) */
-  /*      << endl; */
-
+  double omp_t;
+  int num_threads = 2;
+  omp_set_num_threads(num_threads);
+  Eigen::setNbThreads(num_threads);
+  start = clock();
+  HF();
+  end = clock();
+  omp_t = (double)(end - start);
+  cout << "Omp Time: " << (double) (omp_t / CLOCKS_PER_SEC) << endl;
+  cout << "Omp Speedup: " << (double)(serial_t / omp_t)
+       << endl;
   return 0;
 }

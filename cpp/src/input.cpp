@@ -83,8 +83,6 @@ void input::readVector(std::string fn, Eigen::MatrixXd **arr) {
   return;
 }
 void input::readVector(std::string fn, std::vector<double> **arr) {
-  // TODO: need to read ERI into Nx4 matrix and use IJKL
-  // indexing to build eri reduced matrix
   std::ifstream file(fn);
   if (!file) {
     std::cout << "Could not open file: " << fn << std::endl;
@@ -185,6 +183,40 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   input::readVector(eriFN, eri);
   /* printVector(*eri); */
 }
+void input::gatherData(std::string dataPath, int &num_atoms,
+                       std::vector<int> **elements, std::vector<double> **eri,
+                       Eigen::MatrixXd **coords, Eigen::MatrixXd **T,
+                       Eigen::MatrixXd **V,
+                       Eigen::MatrixXd **overlap, double *enuc) {
+  std::string geom = dataPath + "/geom.xyz";
+  std::string eriFN = dataPath + "/eri.csv";
+  std::string TFN = dataPath + "/T.csv";
+  std::string VFN = dataPath + "/V.csv";
+  std::string overlapFN = dataPath + "/S.csv";
+  std::string enucFN = dataPath + "/enuc.csv";
+  // Gathering Geometry
+  input::readGeometry(geom, num_atoms, elements, coords);
+
+  // Gathering T, V, e1, overlap
+  input::readVector(TFN, T);
+  input::readVector(VFN, V);
+  input::readVector(overlapFN, overlap);
+
+  // Gathering eri
+  int n_basis = (*T)->rows();
+  cout << "n_basis: " << n_basis << endl;
+  input::readERI(eriFN, eri, n_basis);
+  input::readNumber(enucFN, *enuc);
+}
+
+void input::numAtoms(std::string filename, int &num_atoms) {
+  std::ifstream file(filename);
+  if (!file) {
+    std::cout << "Could not open file " << filename << std::endl;
+    return;
+  }
+  file >> num_atoms;
+}
 
 void input::gatherData(std::string dataPath, int &num_atoms,
                        std::vector<int> **elements, std::vector<double> **eri,
@@ -200,9 +232,6 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   std::string enucFN = dataPath + "/enuc.dat";
   // Gathering Geometry
   input::readGeometry(geom, num_atoms, elements, coords);
-  /* std::cout << "Number of atoms: " << num_atoms << std::endl; */
-  /* input::printElements(*elements); */
-  /* input::printVector(*coords); */
 
   // Gathering T, V, e1, overlap
   input::readVector(TFN, T);
@@ -211,20 +240,10 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   input::readVector(overlapFN, overlap);
 
   // Gathering eri
-  /* input::readVector(eriFN, eri); */
   int n_basis = (*T)->rows();
   cout << "n_basis: " << n_basis << endl;
   input::readERI(eriFN, eri, n_basis);
   input::readNumber(enucFN, *enuc);
-}
-
-void input::numAtoms(std::string filename, int &num_atoms) {
-  std::ifstream file(filename);
-  if (!file) {
-    std::cout << "Could not open file " << filename << std::endl;
-    return;
-  }
-  file >> num_atoms;
 }
 
 void input::readGeometry(std::string filename, int &num_atoms,

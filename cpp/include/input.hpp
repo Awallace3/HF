@@ -23,6 +23,12 @@ void gatherData(std::string, int &, std::vector<int> **, std::vector<double> **,
 
 );
 
+void gatherData(std::string, int &, std::vector<int> **, std::vector<double> **,
+                Eigen::MatrixXd **, Eigen::MatrixXd **,
+                Eigen::MatrixXd **, Eigen::MatrixXd **, double *
+
+);
+
 void readVector(std::string, std::vector<std::vector<double>> **);
 void readVector(std::string, std::vector<double> **);
 void readVector(std::string, Eigen::MatrixXd **);
