@@ -38,3 +38,8 @@ cpp_og
 cpp/hf
 cpp/compile_commands.json
 cpp/hf
+schr.pkl
+psi4/schr.pkl
+psi4/timer.dat
+psi4/t.log
+psi4/output.dat

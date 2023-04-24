@@ -1,0 +1,17 @@
+memory 600 mb
+
+molecule h2o {
+  O
+  H 1 0.96
+  H 1 0.96 2 104.5
+}
+
+set basis cc-pVDZ
+
+energy('scf')
+wfn = Wavefunction.build(mol, get_global_option("basis"))
+mints = MintsHelper(wfn.basisset())
+S = np.asarray(mints.ao_overlap())
+T = np.asarray(mints.ao_potential())
+V = np.asarray(mints.ao_kinetic())
+I = np.asarray(mints.ao_eri())
