@@ -6,7 +6,12 @@ import qcelemental as qcel
 
 
 def psi4_compute(mol, outdata="t2"):
-    psi4.set_memory('2 GB')
+    with open(f"{outdata}/geom.xyz", 'w') as f:
+        f.write(f"{mol.count('\n')}\n\n")
+        f.write(mol)
+
+    mol = psi4.geometry(mol)
+    psi4.set_memory('4 GB')
     psi4.set_num_threads(10)
     psi4.core.set_output_file('output.dat', False)
     psi4.set_options({"basis": "aug-cc-pvdz"})
@@ -21,6 +26,10 @@ def psi4_compute(mol, outdata="t2"):
     # print(f"{T = }")
     V = np.asarray(mints.ao_kinetic())
     np.savetxt(f"{outdata}/V.csv", V, delimiter=" ")
+
+    # TODO e1?
+    # e1 = np.asarray(mints.ao_oei_deriv2)
+    # np.savetxt(f"{outdata}/e1.csv", e1, delimiter=" ")
     # print(f"{V = }")
     I = np.asarray(mints.ao_eri())
     nbf = len(I)
@@ -55,18 +64,36 @@ def find_geoms(size=10) -> None:
     for n, r in df.iterrows():
         if len(r['monAs']) == size:
             mmA = r['Geometry'][r['monAs'], :]
+            # tools.print_cartesians_pos_carts(mmA[:,0], mmA[:,1:])
             return tools.print_cartesians_pos_carts(mmA[:,0], mmA[:,1:])
+
+def benzene():
+    return """
+6       1.5000000000    -1.8000000000   -1.3915000000
+6       2.7050743494    -1.8000000000   -0.6957500000
+6       2.7050743494    -1.8000000000   0.6957500000
+6       1.5000000000    -1.8000000000   1.3915000000
+6       0.2949256506    -1.8000000000   0.6957500000
+6       0.2949256506    -1.8000000000   -0.6957500000
+1       1.5000000000    -1.8000000000   -2.4715000000
+1       3.6403817855    -1.8000000000   -1.2357500000
+1       3.6403817855    -1.8000000000   1.2357500000
+1       1.5000000000    -1.8000000000   2.4715000000
+1       -0.6403817855   -1.8000000000   1.2357500000
+1       -0.6403817855   -1.8000000000   -1.2357500000
+"""
 
 def main():
     # mol = qcel.models.Molecule.from_file("t1/t1.xyz")
     d = find_geoms(6)
+
+    # return
+    # d = benzene()
     # fn = "t1/t1.xyz"
     # with open(fn, "r") as f:
     #     d = "".join(f.readlines()[2:])
     #     print(d)
-    print(d)
-    mol = psi4.geometry(d)
-    psi4_compute(mol)
+    psi4_compute(d, outdata="t3")
     return
 
 
