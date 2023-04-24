@@ -83,8 +83,6 @@ void input::readVector(std::string fn, Eigen::MatrixXd **arr) {
   return;
 }
 void input::readVector(std::string fn, std::vector<double> **arr) {
-  // TODO: need to read ERI into Nx4 matrix and use IJKL
-  // indexing to build eri reduced matrix
   std::ifstream file(fn);
   if (!file) {
     std::cout << "Could not open file: " << fn << std::endl;

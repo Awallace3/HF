@@ -119,6 +119,7 @@ towards a distributed HF code.
 The most important files are `hf.cpp`, `input.cpp`, and
 `helper.cpp` which are displayed below.
 
+### hf.cpp
 ```cpp
 #include "helper.hpp"
 #include "input.hpp"
@@ -133,13 +134,11 @@ The most important files are `hf.cpp`, `input.cpp`, and
 
 using namespace std;
 
-void serial() {
+void HF() {
   // Specify Data Path
   /* std::string dataPath = "data/t1"; */
   std::string dataPath = "data/t0";
   double t1 = 1e-8, t2 = 1e-8;
-
-  //
 
   // Make pointers to store input data
   int num_atoms;
@@ -228,7 +227,7 @@ int main() {
   time_t start, end;
   double serial_t;
   start = clock();
-  serial();
+  HF();
   end = clock();
   serial_t = (double)(end - start);
   cout << "Serial Time: " << (serial_t / CLOCKS_PER_SEC) << endl;
@@ -237,17 +236,17 @@ int main() {
   omp_set_num_threads(num_threads);
   Eigen::setNbThreads(num_threads);
   start = clock();
-  serial();
+  HF();
   end = clock();
   omp_t = (double)(end - start);
   cout << "Omp Time: " << (double) (omp_t / CLOCKS_PER_SEC) << endl;
   cout << "Omp Speedup: " << (double)(serial_t / omp_t)
        << endl;
-
   return 0;
 }
 ```
 
+### input.cpp
 ```cpp
 #include "input.hpp"
 #include "helper.hpp"
@@ -334,8 +333,6 @@ void input::readVector(std::string fn, Eigen::MatrixXd **arr) {
   return;
 }
 void input::readVector(std::string fn, std::vector<double> **arr) {
-  // TODO: need to read ERI into Nx4 matrix and use IJKL
-  // indexing to build eri reduced matrix
   std::ifstream file(fn);
   if (!file) {
     std::cout << "Could not open file: " << fn << std::endl;
@@ -578,6 +575,8 @@ void input::readNumber(std::string filename, double &number) {
 }
 ```
 
+### helper.cpp
+
 ```cpp
 #include "helper.hpp"
 #include "stdio.h"
@@ -591,7 +590,6 @@ using namespace std;
 void helper::orthoS(Eigen::MatrixXd *S, Eigen::MatrixXd *S12) {
   // Diagonalize S
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(*S);
-  /* Eigen::MatrixXd D = es.eigenvalues().asDiagonal(); */
   Eigen::MatrixXd LAMBDA = es.eigenvalues().asDiagonal();
   Eigen::MatrixXd U = es.eigenvectors();
   // Invert D
@@ -619,15 +617,8 @@ void helper::getC_0_prime(Eigen::MatrixXd *F, Eigen::MatrixXd *C) {
 void helper::computeEnergy(Eigen::MatrixXd *D, Eigen::MatrixXd *H,
                            Eigen::MatrixXd *F, double *E) {
   // Calculate E
-  // TODO: fix this
   *E = 0;
-  /* for (int i = 0; i < H->rows(); i++) { */
-  /*   for (int j = 0; j < H->rows(); j++) { */
-  /*     *E += (*D)(i, j) * ((*H)(i, j) + (*F)(i, j)); */
-  /*   } */
-  /* } */
   *E = (*D).cwiseProduct((*H) + (*F)).sum();
-  /* *E = (*D * ( (*H) + (*E))); */
 }
 
 void helper::getNumberOfElectrons(int num_atoms, std::vector<int> *elements,
@@ -668,13 +659,6 @@ void helper::updateDensityMatrix(Eigen::MatrixXd *C, Eigen::MatrixXd *D,
     }
 }
 
-// TODO: finish this function
-void helper::eriReducedCalc(std::vector<double> *eri,
-                            std::vector<double> *eriReduced) {
-  /* for (int i =0; i < eri->size(); i++){ */
-  /*     eriReduced->at(eri->at(i)); */
-  /* } */
-}
 
 void helper::updateFockMatrix(Eigen::MatrixXd *H, Eigen::MatrixXd *D,
                               Eigen::MatrixXd *F, std::vector<double> *eri) {
@@ -730,15 +714,251 @@ void helper::SCF(std::vector<double> *eri, Eigen::MatrixXd *S_12,
       E2 = *E;
     }
     iter++;
-    /* converged = true; */
   }
 }
 ```
 
 
+# Output 
 
+The initial output is from using the "Coding Strategy #1" water geometry wiht
+the STO-3G basis set. The results with the serial version and OpenMP 4 threaded
+version yeilded the following ouptuts. The speedup with Eigen detecting OpenMP
+threads and using them is very poor for this small system at about 1.15,
+meaning that the most naive parallelization is hardly an improvement from the
+serial version. 
 
+```log
+-- The CXX compiler identification is GNU 12.2.0
+-- Checking whether CXX compiler has -isysroot
+-- Checking whether CXX compiler has -isysroot - yes
+-- Checking whether CXX compiler supports OSX deployment target flag
+-- Checking whether CXX compiler supports OSX deployment target flag - yes
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/local/bin/g++-12 - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found OpenMP_CXX: -fopenmp (found version "4.5") 
+-- Found OpenMP: TRUE (found version "4.5")  
+-- Looking for sgemm_
+-- Looking for sgemm_ - not found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+-- Looking for dgemm_
+-- Looking for dgemm_ - found
+-- Found BLAS: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Accelerate.framework  
+-- Looking for cheev_
+-- Looking for cheev_ - found
+-- Found LAPACK: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Accelerate.framework;-lm;-ldl  
+-- Found MPI_CXX: /Users/austinwallace/miniconda3/envs/qcn/lib/libmpicxx.dylib (found version "3.1") 
+-- Found MPI: TRUE (found version "3.1")  
+-- Found OpenMP_CXX: -fopenmp (found version "4.5") 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/austinwallace/gits/HF/cpp/build
+[ 25%] Building CXX object src/CMakeFiles/hf.dir/hf.cpp.o
+[ 50%] Building CXX object src/CMakeFiles/hf.dir/input.cpp.o
+[ 75%] Building CXX object src/CMakeFiles/hf.dir/helper.cpp.o
+[100%] Linking CXX executable hf
+ld: warning: directory not found for option '-L/usr/include/eigen3'
+[100%] Built target hf
+n_basis: 7
+arrSize: 406
+count: 406
+e_nuc: 8.90771
 
+H Matrix: 
 
+  -32.6851   -7.60432          0          0 -0.0186797    -1.6196    -1.6196
+  -7.60432   -9.30206          0          0   -0.22216   -3.54321   -3.54321
+         0          0   -7.43084          0          0          0          0
+         0          0          0   -7.56702          0   -1.89086    1.89086
+-0.0186797   -0.22216          0          0   -7.52666   -1.65879   -1.65879
+   -1.6196   -3.54321          0   -1.89086   -1.65879   -4.95649   -1.56026
+   -1.6196   -3.54321          0    1.89086   -1.65879   -1.56026   -4.95649
 
+S Matrix: 
+
+        1  0.236704         0         0        -0 0.0500137 0.0500137
+ 0.236704         1         0         0        -0  0.453995  0.453995
+        0         0         1         0         0         0         0
+        0         0         0         1         0  0.292739 -0.292739
+        0        -0         0         0         1  0.245551  0.245551
+0.0500137  0.453995         0  0.292739  0.245551         1  0.251002
+0.0500137  0.453995         0 -0.292739  0.245551  0.251002         1
+
+S_12 Matrix: 
+
+     1.02406    -0.141659 -3.22048e-18            0   -0.0100026    0.0212116    0.0212116
+   -0.141659      1.22192 -2.96899e-17  2.47692e-18     0.105912    -0.275658    -0.275658
+-3.22048e-18 -2.96899e-17            1  4.23252e-17  1.97909e-17  1.30612e-16   8.2861e-17
+           0  2.47692e-18  4.23252e-17      1.09816 -1.62843e-16    -0.213038     0.213038
+  -0.0100026     0.105912  1.97909e-17 -1.62843e-16      1.05609    -0.146486    -0.146486
+   0.0212116    -0.275658  1.30612e-16    -0.213038    -0.146486      1.19048   -0.0903463
+   0.0212116    -0.275658   8.2861e-17     0.213038    -0.146486   -0.0903463      1.19048
+
+F Matrix: 
+
+    -32.3609     -2.78101  5.24172e-17  1.11022e-16    0.0165515    -0.273188    -0.273188
+    -2.78101     -8.32926  -5.1327e-17  4.44089e-16    -0.281188    -0.481149    -0.481149
+ 5.24172e-17  -5.1327e-17     -7.43084 -6.96731e-16 -5.38842e-16 -1.57009e-15 -9.77471e-16
+  1.8735e-16  1.66533e-16 -6.96731e-16     -7.66432  2.35922e-15    -0.134212     0.134212
+   0.0165515    -0.281188 -5.38842e-16  2.44249e-15     -7.57829    -0.146808    -0.146808
+   -0.273188    -0.481149 -1.57009e-15    -0.134212    -0.146808     -4.24477   -0.0501421
+   -0.273188    -0.481149 -9.77471e-16     0.134212    -0.146808   -0.0501421     -4.24477
+
+C_0_prime Matrix: 
+
+   -0.993361    -0.104697 -6.45607e-16    0.0476199 -7.98146e-15   4.0881e-16   0.00222819
+   -0.113883     0.887058    5.797e-15    -0.417863  6.99798e-14 -2.99761e-14    -0.159843
+ 3.15273e-19  1.64226e-15  4.80473e-15  1.71258e-13            1 -1.14056e-16 -7.14186e-16
+  9.7715e-18 -2.46936e-15     0.998516  8.28671e-15 -4.55392e-15    0.0544598 -9.44874e-15
+-0.000754957     0.418666 -6.32026e-15     0.906926 -1.55863e-13 -8.64117e-15   -0.0469432
+  -0.0114923     0.115943    0.0385089   -0.0174439  3.15953e-15    -0.706057     0.697224
+  -0.0114923     0.115943   -0.0385089   -0.0174439  3.58246e-15     0.706057     0.697224
+
+C Matrix: 
+
+    -1.00161    -0.232145 -1.42291e-15    0.0981483  -1.6388e-14  1.02331e-14     0.054973
+  0.00781923      1.07916  6.54511e-15    -0.411669  6.82443e-14 -1.08663e-13    -0.584993
+  4.4273e-18   1.6493e-15  4.84883e-15  1.71285e-13            1 -1.45466e-16 -5.61539e-16
+-4.33681e-18 -2.62637e-15      1.08012  8.75992e-15 -4.86851e-15     0.360639 -6.61415e-14
+ 0.000444284     0.503178 -6.19296e-15     0.918173 -1.58082e-13 -5.01404e-14    -0.270795
+ -0.00221056    -0.180521    -0.163398   -0.0358456   7.9105e-15    -0.915938     0.818024
+ -0.00221056    -0.180521     0.163398   -0.0358456  6.46414e-15     0.915938     0.818024
+
+D Matrix: 
+
+     1.06675    -0.298759  3.60303e-17 -6.31019e-17   -0.0271382    0.0406029    0.0406029
+   -0.298759      1.33412 -4.88497e-16  6.29026e-16     0.165031    -0.180072    -0.180072
+ 3.60303e-17 -4.88497e-16            1  3.68824e-16  1.73216e-17  6.80666e-16  8.18881e-16
+-6.31019e-17  6.29026e-16  3.68824e-16      1.16667  3.24209e-17     -0.17649      0.17649
+  -0.0271382     0.165031  1.73216e-17  3.24209e-17      1.09623    -0.123747    -0.123747
+   0.0406029    -0.180072  6.80666e-16     -0.17649    -0.123747    0.0605765   0.00717853
+   0.0406029    -0.180072  8.18881e-16      0.17649    -0.123747   0.00717853    0.0605765
+iter: 0 Energy: -82.1486 Delta E: -82.1486
+iter: 1 Energy: -83.8388 Delta E: -1.69013
+iter: 2 Energy: -83.8722 Delta E: -0.0333948
+iter: 3 Energy: -83.8734 Delta E: -0.00128959
+iter: 4 Energy: -83.8736 Delta E: -0.000137273
+iter: 5 Energy: -83.8736 Delta E: -2.36545e-05
+iter: 6 Energy: -83.8736 Delta E: -4.48631e-06
+iter: 7 Energy: -83.8736 Delta E: -8.72434e-07
+iter: 8 Energy: -83.8736 Delta E: -1.70848e-07
+iter: 9 Energy: -83.8736 Delta E: -3.35253e-08
+iter: 10 Energy: -83.8736 Delta E: -6.58248e-09
+
+Final HF Energy: -74.9659010585405
+
+Freed Memory
+Serial Time: 0.011638
+n_basis: 7
+arrSize: 406
+count: 406
+e_nuc: 8.9077081
+
+H Matrix: 
+
+-32.6850823  -7.6043227           0           0  -0.0186797  -1.6196035  -1.6196035
+ -7.6043227  -9.3020628           0           0  -0.2221598  -3.5432107  -3.5432107
+          0           0  -7.4308356           0           0           0           0
+          0           0           0  -7.5670222           0  -1.8908561   1.8908561
+ -0.0186797  -0.2221598           0           0  -7.5266557  -1.6587893  -1.6587893
+ -1.6196035  -3.5432107           0  -1.8908561  -1.6587893  -4.9564901  -1.5602636
+ -1.6196035  -3.5432107           0   1.8908561  -1.6587893  -1.5602636  -4.9564901
+
+S Matrix: 
+
+         1  0.2367039          0          0         -0  0.0500137  0.0500137
+ 0.2367039          1          0          0         -0  0.4539953  0.4539953
+         0          0          1          0          0          0          0
+         0          0          0          1          0  0.2927386 -0.2927386
+         0         -0          0          0          1  0.2455507  0.2455507
+ 0.0500137  0.4539953          0  0.2927386  0.2455507          1  0.2510021
+ 0.0500137  0.4539953          0 -0.2927386  0.2455507  0.2510021          1
+
+S_12 Matrix: 
+
+     1.02406182657061    -0.141659273415172 -3.22048111124557e-18                     0    -0.010002569640787    0.0212115716053913    0.0212115716053913
+   -0.141659273415172      1.22191752943491 -2.96898659569188e-17  2.47691638127938e-18     0.105911538776014    -0.275657558591939    -0.275657558591939
+-3.22048111124557e-18 -2.96898659569188e-17                     1  4.23252413596324e-17  1.97909022691313e-17  1.30611707135044e-16  8.28610253903473e-17
+                    0  2.47691638127938e-18  4.23252413596325e-17      1.09816107111058 -1.62842650124526e-16    -0.213037590176114     0.213037590176114
+   -0.010002569640787     0.105911538776014  1.97909022691313e-17 -1.62842650124526e-16      1.05609001943927    -0.146486280475907    -0.146486280475907
+   0.0212115716053913    -0.275657558591939  1.30611707135044e-16    -0.213037590176114    -0.146486280475907      1.19047902077767   -0.0903463197977045
+   0.0212115716053913    -0.275657558591939  8.28610253903472e-17     0.213037590176114    -0.146486280475907   -0.0903463197977044      1.19047902077767
+
+F Matrix: 
+
+    -32.3609072054604     -2.78101317027712  5.24172002424587e-17  1.11022302462516e-16    0.0165514684591211    -0.273188318077003    -0.273188318077005
+    -2.78101317027712     -8.32925561645821 -5.13270290872514e-17  4.44089209850063e-16    -0.281188185381983    -0.481149427898156    -0.481149427898158
+ 5.24172002424587e-17 -5.13270290872513e-17     -7.43083559999999 -6.96731231395782e-16 -5.38841970692135e-16 -1.57009226303266e-15  -9.7747116702658e-16
+ 1.87350135405495e-16  1.66533453693773e-16 -6.96731231395782e-16     -7.66432453273666  2.35922392732846e-15    -0.134212006461572     0.134212006461574
+   0.0165514684591212    -0.281188185381983 -5.38841970692135e-16  2.44249065417534e-15      -7.5782870430736    -0.146808221404036    -0.146808221404037
+   -0.273188318077004    -0.481149427898157 -1.57009226303266e-15    -0.134212006461572    -0.146808221404037     -4.24477070218156   -0.0501420820421337
+   -0.273188318077005    -0.481149427898159  -9.7747116702658e-16     0.134212006461574    -0.146808221404037   -0.0501420820421338     -4.24477070218156
+
+C_0_prime Matrix: 
+
+   -0.993360946807231    -0.104696768441391 -6.45607357871904e-16     0.047619861479712 -7.98145833312514e-15  4.08810439798154e-16   0.00222818958438748
+   -0.113882888380018     0.887057650718452  5.79699625674734e-15    -0.417863112682388  6.99797794137324e-14 -2.99760857482156e-14     -0.15984314528772
+ 3.15272521982205e-19  1.64225978658692e-15  4.80473010276224e-15  1.71258418115006e-13                     1 -1.14056123398505e-16 -7.14186418134342e-16
+ 9.77150076534427e-18 -2.46935679192742e-15     0.998515963197578  8.28671139854403e-15 -4.55392017498224e-15    0.0544598130699557 -9.44874050494495e-15
+-0.000754957031892415     0.418666423379276 -6.32026050815077e-15     0.906925679062221 -1.55863042394564e-13 -8.64117352984491e-15   -0.0469432490589991
+  -0.0114923264038581     0.115943384706922    0.0385089031239175   -0.0174439174151013  3.15953114908042e-15    -0.706057408699895     0.697223613858515
+  -0.0114923264038582     0.115943384706923   -0.0385089031239176   -0.0174439174151022  3.58245893480923e-15     0.706057408700153     0.697223613858253
+
+C Matrix: 
+
+    -1.00161044750755    -0.232144963446622 -1.42290693116998e-15    0.0981482541870465 -1.63879728445281e-14  1.02331337847872e-14    0.0549730380561187
+  0.00781922696659781      1.07916282558611  6.54511167486049e-15    -0.411669067669377  6.82443017090394e-14 -1.08663078535187e-13    -0.584992535025317
+ 4.42730077727251e-18   1.6492968752263e-15  4.84883135828343e-15  1.71284896132709e-13                     1 -1.45465821282211e-16 -5.61538691641825e-16
+-4.33680868994202e-18 -2.62637134262889e-15      1.08012367182238  8.75991987281388e-15 -4.86851309946075e-15     0.360639184404274 -6.61415366920437e-14
+  0.00044428381163818      0.50317807835031  -6.1929628092372e-15     0.918172900946269 -1.58081720406738e-13 -5.01404473496336e-14    -0.270795205621142
+ -0.00221056111666548    -0.180520707470594    -0.163398255593119   -0.0358455758061886  7.91050438005288e-15    -0.915938208301685     0.818024274039899
+ -0.00221056111666562    -0.180520707470594     0.163398255593117   -0.0358455758061863  6.46413796363787e-15     0.915938208301988      0.81802427403956
+
+D Matrix: 
+
+     1.06674785240988    -0.298758634414375  3.60302859820339e-17 -6.31019445971245e-17   -0.0271381886434372    0.0406029134607188    0.0406029134607187
+   -0.298758634414375      1.33412496571312 -4.88497293589624e-16  6.29025778196539e-16      0.16503116866963    -0.180072006857659    -0.180072006857658
+ 3.60302859820339e-17 -4.88497293589624e-16                     1  3.68824431297332e-16  1.73215629949631e-17  6.80666040100179e-16  8.18880794903004e-16
+-6.31019445971245e-17  6.29025778196539e-16  3.68824431297332e-16      1.16666714643106  3.24209007142285e-17     -0.17649032380061     0.176490323800609
+  -0.0271381886434372      0.16503116866963  1.73215629949631e-17  3.24209007142285e-17       1.0962298519525    -0.123747481128067    -0.123747481128067
+   0.0406029134607188    -0.180072006857659  6.80666040100179e-16     -0.17649032380061    -0.123747481128067    0.0605765076418855   0.00717852778013748
+   0.0406029134607187    -0.180072006857658  8.18880794903004e-16     0.176490323800609    -0.123747481128067   0.00717852778013748    0.0605765076418848
+iter: 0 Energy: -82.1486234977129 Delta E: -82.1486234977129
+iter: 1 Energy: -83.8387582899332 Delta E: -1.69013479222033
+iter: 2 Energy: -83.8721530704074 Delta E: -0.0333947804741541
+iter: 3 Energy: -83.8734426611114 Delta E: -0.00128959070397627
+iter: 4 Energy: -83.8735799342989 Delta E: -0.000137273187519327
+iter: 5 Energy: -83.8736035888434 Delta E: -2.36545445346792e-05
+iter: 6 Energy: -83.8736080751508 Delta E: -4.48630736116229e-06
+iter: 7 Energy: -83.8736089475846 Delta E: -8.7243387270064e-07
+iter: 8 Energy: -83.8736091184327 Delta E: -1.7084808234813e-07
+iter: 9 Energy: -83.873609151958 Delta E: -3.35253247385481e-08
+iter: 10 Energy: -83.8736091585405 Delta E: -6.58248211493628e-09
+
+Final HF Energy: -74.9659010585405
+
+Freed Memory
+Omp Time: 0.010108
+Omp Speedup: 1.15136525524337
+
+[Process exited 0]
+
+```
+
+# Results
+
+The final energy produced from the present work yielded -74.965901 Ha while
+Psi4 on the same geometry and basis set with default options yields -74.965990
+Ha. The difference between these two energies is likely due to me not
+implementing a cutoff threshold for the commutator of the density and Fock
+matrix for checking convergence, along with me not using density fitting like
+Psi4. The speedup from adding 4 Omp threads is quite underwhelming at 1.15;
+however, it is likely due to the size of the system not being large enough and
+only calling OMP threads for a few of the steps while mostly remaining serial
+besides the eigensolvers.
 

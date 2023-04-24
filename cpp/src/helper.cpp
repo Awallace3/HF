@@ -10,7 +10,6 @@ using namespace std;
 void helper::orthoS(Eigen::MatrixXd *S, Eigen::MatrixXd *S12) {
   // Diagonalize S
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(*S);
-  /* Eigen::MatrixXd D = es.eigenvalues().asDiagonal(); */
   Eigen::MatrixXd LAMBDA = es.eigenvalues().asDiagonal();
   Eigen::MatrixXd U = es.eigenvectors();
   // Invert D
@@ -38,15 +37,8 @@ void helper::getC_0_prime(Eigen::MatrixXd *F, Eigen::MatrixXd *C) {
 void helper::computeEnergy(Eigen::MatrixXd *D, Eigen::MatrixXd *H,
                            Eigen::MatrixXd *F, double *E) {
   // Calculate E
-  // TODO: fix this
   *E = 0;
-  /* for (int i = 0; i < H->rows(); i++) { */
-  /*   for (int j = 0; j < H->rows(); j++) { */
-  /*     *E += (*D)(i, j) * ((*H)(i, j) + (*F)(i, j)); */
-  /*   } */
-  /* } */
   *E = (*D).cwiseProduct((*H) + (*F)).sum();
-  /* *E = (*D * ( (*H) + (*E))); */
 }
 
 void helper::getNumberOfElectrons(int num_atoms, std::vector<int> *elements,
@@ -87,13 +79,6 @@ void helper::updateDensityMatrix(Eigen::MatrixXd *C, Eigen::MatrixXd *D,
     }
 }
 
-// TODO: finish this function
-void helper::eriReducedCalc(std::vector<double> *eri,
-                            std::vector<double> *eriReduced) {
-  /* for (int i =0; i < eri->size(); i++){ */
-  /*     eriReduced->at(eri->at(i)); */
-  /* } */
-}
 
 void helper::updateFockMatrix(Eigen::MatrixXd *H, Eigen::MatrixXd *D,
                               Eigen::MatrixXd *F, std::vector<double> *eri) {
@@ -149,6 +134,5 @@ void helper::SCF(std::vector<double> *eri, Eigen::MatrixXd *S_12,
       E2 = *E;
     }
     iter++;
-    /* converged = true; */
   }
 }

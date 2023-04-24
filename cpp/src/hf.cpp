@@ -11,13 +11,11 @@
 
 using namespace std;
 
-void serial() {
+void HF() {
   // Specify Data Path
   /* std::string dataPath = "data/t1"; */
   std::string dataPath = "data/t0";
   double t1 = 1e-8, t2 = 1e-8;
-
-  //
 
   // Make pointers to store input data
   int num_atoms;
@@ -106,7 +104,7 @@ int main() {
   time_t start, end;
   double serial_t;
   start = clock();
-  serial();
+  HF();
   end = clock();
   serial_t = (double)(end - start);
   cout << "Serial Time: " << (serial_t / CLOCKS_PER_SEC) << endl;
@@ -115,12 +113,11 @@ int main() {
   omp_set_num_threads(num_threads);
   Eigen::setNbThreads(num_threads);
   start = clock();
-  serial();
+  HF();
   end = clock();
   omp_t = (double)(end - start);
   cout << "Omp Time: " << (double) (omp_t / CLOCKS_PER_SEC) << endl;
   cout << "Omp Speedup: " << (double)(serial_t / omp_t)
        << endl;
-
   return 0;
 }
