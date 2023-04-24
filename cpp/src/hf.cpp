@@ -11,6 +11,16 @@
 
 using namespace std;
 
+void collectInputData(
+        std::string dataPath,
+        vector<int> *elements, vector<double> *eri,
+                      Eigen::MatrixXd *coords, Eigen::MatrixXd *T,
+                      Eigen::MatrixXd *V,
+                      Eigen::MatrixXd *S) {
+
+}
+
+
 void HF() {
   // Specify Data Path
   /* std::string dataPath = "data/t1"; */
@@ -35,7 +45,6 @@ void HF() {
   cout << "e_nuc: " << e_nuc << endl;
 
   // Starting HF Code
-
   // Allocate Memory for Matrices
   Eigen::MatrixXd *H = nullptr;
   Eigen::MatrixXd *S_12 = nullptr;
