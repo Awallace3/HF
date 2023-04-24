@@ -139,7 +139,7 @@ void helper::SCF(std::vector<double> *eri, Eigen::MatrixXd *S_12,
     helper::updateDensityMatrix(C, D, num_electrons);
     /* cout << endl <<"D Matrix: " << endl << endl <<*D << endl; */
 
-    /* cout << "iter: " << iter << " Energy: " << *E << " " << E2 << endl; */
+    cout << "iter: " << iter << " Energy: " << *E << " Delta E: " << (*E - E2) << endl;
     if (abs(*E - E2) < t1) {
       converged = true;
     } else if (iter > max_iter) {

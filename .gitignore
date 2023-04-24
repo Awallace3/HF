@@ -43,3 +43,4 @@ psi4/timer.dat
 psi4/t.log
 psi4/output.dat
 psi4/t2/eri.csv
+cpp/data/t2/eri.csv

@@ -8,7 +8,7 @@ import qcelemental as qcel
 def psi4_compute(mol, outdata="t2"):
     psi4.set_memory('2 GB')
     psi4.set_num_threads(10)
-    psi4.core.set_output_file('output.dat', False)
+    psi4.core.set_output_file(f'{outdata}/output.dat', False)
     psi4.set_options({"basis": "aug-cc-pvdz"})
     wfn = psi4.core.Wavefunction.build(mol,
                                        psi4.core.get_global_option("basis"))
