@@ -37,4 +37,7 @@ cpp/build
 cpp_og
 cpp/hf
 schr.pkl
-psi4
+psi4/schr.pkl
+psi4/timer.dat
+psi4/t.log
+psi4/output.dat
