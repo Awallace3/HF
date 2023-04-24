@@ -36,3 +36,5 @@ build
 cpp/build
 cpp_og
 cpp/hf
+cpp/compile_commands.json
+cpp/hf
