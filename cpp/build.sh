@@ -7,4 +7,5 @@ make
 cp src/hf ..
 cp compile_commands.json ..
 cd ..
+export OMP_NUM_THREADS=4
 ./hf

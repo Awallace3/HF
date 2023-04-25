@@ -48,7 +48,7 @@ void helper::getNumberOfElectrons(int num_atoms, std::vector<int> *elements,
   /* int sum = 0; */
 /* #pragma omp parallel for reduction(+ : sum) */
   for (int i = 0; i < num_atoms; i++) {
-    num_electrons += elements->at(i);
+    *num_electrons += elements->at(i);
   }
   /* *num_electrons = sum; */
 }
