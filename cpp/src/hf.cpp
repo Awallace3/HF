@@ -44,7 +44,6 @@ void HF_og() {
 
   // Allocate memory for energy and electron count
   int num_electrons;
-  /* int eriSize; */
 
   // Set Number of Electrons for a Neutral Molecule
   helper::getNumberOfElectrons(num_atoms, elements, &num_electrons);
@@ -177,7 +176,8 @@ void HF(
 }
 
 void timings() {
-  std::string dataPath = "data/t1";
+  /* std::string dataPath = "data/t1"; */
+  std::string dataPath = "data/t3";
   int num_atoms;
   double E = 0, e_nuc = 0;
   std::vector<int> *elements = nullptr;
@@ -205,7 +205,7 @@ void timings() {
   double omp_t;
   int num_threads = 4;
   omp_set_num_threads(num_threads);
-  Eigen::setNbThreads(num_threads);
+  /* Eigen::setNbThreads(num_threads); */
   start = clock();
   HF(num_atoms, E, e_nuc, elements, eri, coords, T, V, S);
   end = clock();

@@ -10,12 +10,13 @@ using namespace std;
 void helper::orthoS(Eigen::MatrixXd *S, Eigen::MatrixXd *S12) {
   // Diagonalize S
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(*S);
+/* #pragma omp parallel public(es, LAMBDA) */
   Eigen::MatrixXd LAMBDA = es.eigenvalues().asDiagonal();
   Eigen::MatrixXd U = es.eigenvectors();
   // Invert D
 
   // TOOD: Parallelize
-/* #pragma omp parallel for */
+#pragma omp parallel for
   for (int i = 0; i < LAMBDA.rows(); i++) {
     LAMBDA(i, i) = 1 / sqrt(LAMBDA(i, i));
   }
@@ -73,6 +74,7 @@ void helper::updateDensityMatrix(Eigen::MatrixXd *C, Eigen::MatrixXd *D,
                                  int num_electrons) {
   // Calculate D
   // TODO: Parallelize
+#pragma omp parallel for
   for (int i = 0; i < C->rows(); i++) {
     for (int j = 0; j < C->rows(); j++) {
       (*D)(i, j) = 0;
@@ -87,6 +89,7 @@ void helper::updateFockMatrix(Eigen::MatrixXd *H, Eigen::MatrixXd *D,
                               Eigen::MatrixXd *F, std::vector<double> *eri) {
   // Update Fock Matrix
   *F = *H;
+#pragma omp parallel for
   for (int mu = 0; mu < H->rows(); mu++) {
     for (int nu = 0; nu < H->cols(); nu++) {
       for (int rho = 0; rho < H->rows(); rho++) {
