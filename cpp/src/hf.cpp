@@ -171,11 +171,12 @@ void HF(int num_atoms, double E = 0, double e_nuc = 0,
   printf("\nFreed Memory\n");
 }
 
-void timings() {
-  /* std::string dataPath = "data/t1"; */
-  std::string dataPath = "data/t3";
+void timings(std::string dataPath, int num_threads) {
   int num_atoms;
   double E = 0, e_nuc = 0;
+  time_t start, end;
+  double itime, ftime, exec_time;
+
   std::vector<int> *elements = nullptr;
   std::vector<double> *eri = nullptr;
 
@@ -185,29 +186,21 @@ void timings() {
   Eigen::MatrixXd *S = nullptr;
   input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &S,
                     &e_nuc);
-
-  omp_set_num_threads(1);
-  Eigen::setNbThreads(1);
-  time_t start, end;
-  double serial_t;
-  start = clock();
-  HF(num_atoms, E, e_nuc, elements, eri, coords, T, V, S);
-  end = clock();
-  serial_t = (double)(end - start);
-  cout << "Serial Time: " << (serial_t / CLOCKS_PER_SEC) << endl;
-
-  input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &S,
-                    &e_nuc);
-  double omp_t;
-  int num_threads = 4;
   omp_set_num_threads(num_threads);
-  /* Eigen::setNbThreads(num_threads); */
+  Eigen::setNbThreads(num_threads);
+  double totTime;
+  omp_set_num_threads(num_threads);
+  Eigen::setNbThreads(num_threads);
   start = clock();
+  itime = omp_get_wtime();
   HF(num_atoms, E, e_nuc, elements, eri, coords, T, V, S);
+  ftime = omp_get_wtime();
   end = clock();
-  omp_t = (double)(end - start);
-  cout << "Omp Time: " << (double)(omp_t / CLOCKS_PER_SEC) << endl;
-  cout << "Omp Speedup: " << (serial_t / omp_t) << endl;
+  totTime = (double)(end - start);
+  exec_time = ftime - itime;
+
+  cout << "Time (CPU) : " << (double)(totTime / CLOCKS_PER_SEC) << endl;
+  cout << "Time (USR) : " << exec_time << endl;
 }
 
 void timings_parrallel(std::string dataPath, int num_threads) {
@@ -276,7 +269,7 @@ int main(int argc, char *argv[]) {
   }
   cout << "Data Path: " << dataPath << endl;
   cout << "Num Threads: " << numThreads << endl;
-  timings_parrallel(dataPath, numThreads);
-
+  /* timings_parrallel(dataPath, numThreads); */
+  timings(dataPath, numThreads);
   return 0;
 }
