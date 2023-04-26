@@ -214,14 +214,15 @@ void timings() {
   cout << "Omp Time: " << (double)(omp_t / CLOCKS_PER_SEC) << endl;
   cout << "Omp Speedup: " << (serial_t / omp_t) << endl;
 }
+
 void timings_parrallel() {
   /* std::string dataPath = "data/t1"; */
-  std::string dataPath = "data/t3";
+  std::string dataPath = "data/t1";
   int num_atoms;
   double E = 0, e_nuc = 0;
   time_t start, end;
   double serial_t;
-      double itime, ftime, exec_time;
+  double itime, ftime, exec_time;
 
     // Required code for which execution time needs to be computed
 
@@ -239,8 +240,8 @@ void timings_parrallel() {
   start = clock();
   HF(num_atoms, E, e_nuc, elements, eri, coords, T, V, S);
   end = clock();
-  serial_t = (double)(end - start);
-  cout << "Serial Time: " << (serial_t / CLOCKS_PER_SEC) << endl;
+  serial_t = (double)(end - start) / CLOCKS_PER_SEC ;
+  cout << "Serial Time: " << serial_t << endl;
 
   input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &S,
                     &e_nuc);
@@ -251,17 +252,35 @@ void timings_parrallel() {
   start = clock();
   itime = omp_get_wtime();
   HF(num_atoms, E, e_nuc, elements, eri, coords, T, V, S);
-  end = clock();
   ftime = omp_get_wtime();
+  end = clock();
   omp_t = (double)(end - start);
-  cout << "Omp Time: " << (double)(omp_t / CLOCKS_PER_SEC) << endl;
-    exec_time = ftime - itime;
-    printf("\n\nTime taken is %f\n", exec_time);
-  cout << "Omp Speedup: " << ((double)( serial_t) / exec_time) << endl;
+exec_time = ftime - itime;
+  double ompSpeedUp =  serial_t / exec_time;
+  double eff =  serial_t / (exec_time * num_threads) ;
+
+  cout << "Serial Time (CPU) : " << serial_t << endl;
+  cout << "OMP    Time (CPU) : " << (double)(omp_t / CLOCKS_PER_SEC) << endl;
+  cout << "OMP    Time (USR) : " << exec_time << endl;
+  cout << "Omp Speedup       : " << ompSpeedUp << endl;
+  cout << "Parallel Efficieny: " << eff << endl;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     /* timings(); */
+    printf("Running: %s", argv[0]);
+    if (argc == 1){
+        printf("You must pass a data path and number of threads like below:\n\t./hf data/t1 4\n")
+    }
+    std::string dataPath = "";
+    int numThreads = 1;
+    if (argc >= 2) {
+        for (int i=1; i < argc; i++){
+            numThreads;
+
+        }
+   }
+
     timings_parrallel();
   return 0;
 }
