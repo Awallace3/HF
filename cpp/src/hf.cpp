@@ -269,6 +269,7 @@ int main(int argc, char *argv[]) {
   }
   cout << "Data Path: " << dataPath << endl;
   cout << "Num Threads: " << numThreads << endl;
+  cout.precision(15);
   /* timings_parrallel(dataPath, numThreads); */
   timings(dataPath, numThreads);
   return 0;
