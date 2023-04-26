@@ -10,7 +10,7 @@ using namespace std;
 void helper::orthoS(Eigen::MatrixXd *S, Eigen::MatrixXd *S12) {
   // Diagonalize S
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(*S);
-/* #pragma omp parallel public(es, LAMBDA) */
+  /* #pragma omp parallel public(es, LAMBDA) */
   Eigen::MatrixXd LAMBDA = es.eigenvalues().asDiagonal();
   Eigen::MatrixXd U = es.eigenvectors();
   // Invert D
@@ -139,7 +139,7 @@ void helper::SCF(std::vector<double> *eri, Eigen::MatrixXd *S_12,
       converged = true;
     } else {
       E2 = *E;
+      iter++;
     }
-    iter++;
   }
 }
