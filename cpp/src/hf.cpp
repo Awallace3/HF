@@ -211,7 +211,7 @@ void timings() {
   end = clock();
   omp_t = (double)(end - start);
   cout << "Omp Time: " << (double)(omp_t / CLOCKS_PER_SEC) << endl;
-  cout << "Omp Speedup: " << (double)(serial_t / omp_t) << endl;
+  cout << "Omp Speedup: " << (serial_t / omp_t) << endl;
 }
 
 int main() {
