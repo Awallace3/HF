@@ -1,17 +1,17 @@
 [
 {
-  "directory": "/Users/austinwallace/gits/HF/cpp/build/src",
-  "command": "g++-12  -I/usr/local/include -I/usr/local/include/eigen3 -I/usr/lib -I/Users/austinwallace/gits/HF/cpp/include -I/usr/include/eigen3 -g -O0 -fopenmp -Wall -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -std=gnu++17 -o CMakeFiles/hf.dir/hf.cpp.o -c /Users/austinwallace/gits/HF/cpp/src/hf.cpp",
-  "file": "/Users/austinwallace/gits/HF/cpp/src/hf.cpp"
+  "directory": "/theoryfs2/ds/amwalla3/gits/HF/cpp/build/src",
+  "command": "g++  -I/usr/lib -I/usr/include/eigen3 -I/theoryfs2/ds/amwalla3/gits/HF/cpp/include -I/usr/local/include/eigen3 -g -O0 -fopenmp -Wall -o CMakeFiles/hf.dir/hf.cpp.o -c /theoryfs2/ds/amwalla3/gits/HF/cpp/src/hf.cpp",
+  "file": "/theoryfs2/ds/amwalla3/gits/HF/cpp/src/hf.cpp"
 },
 {
-  "directory": "/Users/austinwallace/gits/HF/cpp/build/src",
-  "command": "g++-12  -I/usr/local/include -I/usr/local/include/eigen3 -I/usr/lib -I/Users/austinwallace/gits/HF/cpp/include -I/usr/include/eigen3 -g -O0 -fopenmp -Wall -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -std=gnu++17 -o CMakeFiles/hf.dir/input.cpp.o -c /Users/austinwallace/gits/HF/cpp/src/input.cpp",
-  "file": "/Users/austinwallace/gits/HF/cpp/src/input.cpp"
+  "directory": "/theoryfs2/ds/amwalla3/gits/HF/cpp/build/src",
+  "command": "g++  -I/usr/lib -I/usr/include/eigen3 -I/theoryfs2/ds/amwalla3/gits/HF/cpp/include -I/usr/local/include/eigen3 -g -O0 -fopenmp -Wall -o CMakeFiles/hf.dir/input.cpp.o -c /theoryfs2/ds/amwalla3/gits/HF/cpp/src/input.cpp",
+  "file": "/theoryfs2/ds/amwalla3/gits/HF/cpp/src/input.cpp"
 },
 {
-  "directory": "/Users/austinwallace/gits/HF/cpp/build/src",
-  "command": "g++-12  -I/usr/local/include -I/usr/local/include/eigen3 -I/usr/lib -I/Users/austinwallace/gits/HF/cpp/include -I/usr/include/eigen3 -g -O0 -fopenmp -Wall -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -std=gnu++17 -o CMakeFiles/hf.dir/helper.cpp.o -c /Users/austinwallace/gits/HF/cpp/src/helper.cpp",
-  "file": "/Users/austinwallace/gits/HF/cpp/src/helper.cpp"
+  "directory": "/theoryfs2/ds/amwalla3/gits/HF/cpp/build/src",
+  "command": "g++  -I/usr/lib -I/usr/include/eigen3 -I/theoryfs2/ds/amwalla3/gits/HF/cpp/include -I/usr/local/include/eigen3 -g -O0 -fopenmp -Wall -o CMakeFiles/hf.dir/helper.cpp.o -c /theoryfs2/ds/amwalla3/gits/HF/cpp/src/helper.cpp",
+  "file": "/theoryfs2/ds/amwalla3/gits/HF/cpp/src/helper.cpp"
 }
 ]

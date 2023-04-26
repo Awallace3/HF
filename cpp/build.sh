@@ -9,5 +9,5 @@ make
 cp src/hf ..
 cp compile_commands.json ..
 cd ..
-export OMP_NUM_THREADS=$numThreads
-./hf data/t1 $numThreads
+# export OMP_NUM_THREADS=$numThreads
+# ./hf data/t1 $numThreads
