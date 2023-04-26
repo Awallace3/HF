@@ -7,7 +7,8 @@ import qcelemental as qcel
 
 def psi4_compute(mol, outdata="t2"):
     with open(f"{outdata}/geom.xyz", 'w') as f:
-        f.write(f"{mol.count('\n')}\n\n")
+        n = mol.count('\n')
+        f.write(f"{n}\n\n")
         f.write(mol)
 
     mol = psi4.geometry(mol)
