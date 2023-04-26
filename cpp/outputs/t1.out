@@ -1,0 +1,151 @@
+\nTiming for data/t1\n
+./hf data/t1 1
+
+Running: ./hf
+
+Data Path: data/t1
+Num Threads: 1
+n_basis: 7
+iter: 0 Energy: -82.1486 Delta E: -82.1486
+iter: 1 Energy: -83.8388 Delta E: -1.69013
+iter: 2 Energy: -83.8722 Delta E: -0.0333948
+iter: 3 Energy: -83.8734 Delta E: -0.00128959
+iter: 4 Energy: -83.8736 Delta E: -0.000137273
+iter: 5 Energy: -83.8736 Delta E: -2.36545e-05
+iter: 6 Energy: -83.8736 Delta E: -4.48631e-06
+iter: 7 Energy: -83.8736 Delta E: -8.72434e-07
+iter: 8 Energy: -83.8736 Delta E: -1.70848e-07
+iter: 9 Energy: -83.8736 Delta E: -3.35253e-08
+iter: 10 Energy: -83.8736 Delta E: -6.58248e-09
+
+Final HF Energy: -74.9659010585405
+
+Freed Memory
+Time (CPU) : 0.008954
+Time (USR) : 0.00894462922587991
+
+./hf data/t1 2
+
+Running: ./hf
+
+Data Path: data/t1
+Num Threads: 2
+n_basis: 7
+iter: 0 Energy: -82.1486 Delta E: -82.1486
+iter: 1 Energy: -83.8388 Delta E: -1.69013
+iter: 2 Energy: -83.8722 Delta E: -0.0333948
+iter: 3 Energy: -83.8734 Delta E: -0.00128959
+iter: 4 Energy: -83.8736 Delta E: -0.000137273
+iter: 5 Energy: -83.8736 Delta E: -2.36545e-05
+iter: 6 Energy: -83.8736 Delta E: -4.48631e-06
+iter: 7 Energy: -83.8736 Delta E: -8.72434e-07
+iter: 8 Energy: -83.8736 Delta E: -1.70848e-07
+iter: 9 Energy: -83.8736 Delta E: -3.35253e-08
+iter: 10 Energy: -83.8736 Delta E: -6.58248e-09
+
+Final HF Energy: -74.9659010585405
+
+Freed Memory
+Time (CPU) : 0.012446
+Time (USR) : 0.00687378598377109
+
+./hf data/t1 4
+
+Running: ./hf
+
+Data Path: data/t1
+Num Threads: 4
+n_basis: 7
+iter: 0 Energy: -82.1486 Delta E: -82.1486
+iter: 1 Energy: -83.8388 Delta E: -1.69013
+iter: 2 Energy: -83.8722 Delta E: -0.0333948
+iter: 3 Energy: -83.8734 Delta E: -0.00128959
+iter: 4 Energy: -83.8736 Delta E: -0.000137273
+iter: 5 Energy: -83.8736 Delta E: -2.36545e-05
+iter: 6 Energy: -83.8736 Delta E: -4.48631e-06
+iter: 7 Energy: -83.8736 Delta E: -8.72434e-07
+iter: 8 Energy: -83.8736 Delta E: -1.70848e-07
+iter: 9 Energy: -83.8736 Delta E: -3.35253e-08
+iter: 10 Energy: -83.8736 Delta E: -6.58248e-09
+
+Final HF Energy: -74.9659010585405
+
+Freed Memory
+Time (CPU) : 0.022395
+Time (USR) : 0.00679890578612685
+
+./hf data/t1 6
+
+Running: ./hf
+
+Data Path: data/t1
+Num Threads: 6
+n_basis: 7
+iter: 0 Energy: -82.1486 Delta E: -82.1486
+iter: 1 Energy: -83.8388 Delta E: -1.69013
+iter: 2 Energy: -83.8722 Delta E: -0.0333948
+iter: 3 Energy: -83.8734 Delta E: -0.00128959
+iter: 4 Energy: -83.8736 Delta E: -0.000137273
+iter: 5 Energy: -83.8736 Delta E: -2.36545e-05
+iter: 6 Energy: -83.8736 Delta E: -4.48631e-06
+iter: 7 Energy: -83.8736 Delta E: -8.72434e-07
+iter: 8 Energy: -83.8736 Delta E: -1.70848e-07
+iter: 9 Energy: -83.8736 Delta E: -3.35253e-08
+iter: 10 Energy: -83.8736 Delta E: -6.58248e-09
+
+Final HF Energy: -74.9659010585405
+
+Freed Memory
+Time (CPU) : 0.020431
+Time (USR) : 0.00625808583572507
+
+./hf data/t1 8
+
+Running: ./hf
+
+Data Path: data/t1
+Num Threads: 8
+n_basis: 7
+iter: 0 Energy: -82.1486 Delta E: -82.1486
+iter: 1 Energy: -83.8388 Delta E: -1.69013
+iter: 2 Energy: -83.8722 Delta E: -0.0333948
+iter: 3 Energy: -83.8734 Delta E: -0.00128959
+iter: 4 Energy: -83.8736 Delta E: -0.000137273
+iter: 5 Energy: -83.8736 Delta E: -2.36545e-05
+iter: 6 Energy: -83.8736 Delta E: -4.48631e-06
+iter: 7 Energy: -83.8736 Delta E: -8.72434e-07
+iter: 8 Energy: -83.8736 Delta E: -1.70848e-07
+iter: 9 Energy: -83.8736 Delta E: -3.35253e-08
+iter: 10 Energy: -83.8736 Delta E: -6.58248e-09
+
+Final HF Energy: -74.9659010585405
+
+Freed Memory
+Time (CPU) : 0.030145
+Time (USR) : 0.00609015300869942
+
+./hf data/t1 10
+
+Running: ./hf
+
+Data Path: data/t1
+Num Threads: 10
+n_basis: 7
+iter: 0 Energy: -82.1486 Delta E: -82.1486
+iter: 1 Energy: -83.8388 Delta E: -1.69013
+iter: 2 Energy: -83.8722 Delta E: -0.0333948
+iter: 3 Energy: -83.8734 Delta E: -0.00128959
+iter: 4 Energy: -83.8736 Delta E: -0.000137273
+iter: 5 Energy: -83.8736 Delta E: -2.36545e-05
+iter: 6 Energy: -83.8736 Delta E: -4.48631e-06
+iter: 7 Energy: -83.8736 Delta E: -8.72434e-07
+iter: 8 Energy: -83.8736 Delta E: -1.70848e-07
+iter: 9 Energy: -83.8736 Delta E: -3.35253e-08
+iter: 10 Energy: -83.8736 Delta E: -6.58248e-09
+
+Final HF Energy: -74.9659010585405
+
+Freed Memory
+Time (CPU) : 0.045239
+Time (USR) : 0.0056780893355608
+
