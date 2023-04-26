@@ -45,12 +45,9 @@ void helper::getNumberOfElectrons(int num_atoms, std::vector<int> *elements,
                                   int *num_electrons) {
   // Calculate number of electrons
   *num_electrons = 0;
-  /* int sum = 0; */
-/* #pragma omp parallel for reduction(+ : sum) */
   for (int i = 0; i < num_atoms; i++) {
     *num_electrons += elements->at(i);
   }
-  /* *num_electrons = sum; */
 }
 
 int helper::indexIJKL(int i, int j, int k, int l) {

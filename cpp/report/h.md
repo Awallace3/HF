@@ -728,6 +728,19 @@ threads and using them is very poor for this small system at about 1.15,
 meaning that the most naive parallelization is hardly an improvement from the
 serial version. 
 
+# Results
+
+The final energy produced from the present work yielded -74.965901 Ha while
+Psi4 on the same geometry and basis set with default options yields -74.965990
+Ha. The difference between these two energies is likely due to me not
+implementing a cutoff threshold for the commutator of the density and Fock
+matrix for checking convergence, along with me not using density fitting like
+Psi4. The speedup from adding 4 Omp threads is quite underwhelming at 1.15;
+however, it is likely due to the size of the system not being large enough and
+only calling OMP threads for a few of the steps while mostly remaining serial
+besides the eigensolvers.
+
+
 ```log
 -- The CXX compiler identification is GNU 12.2.0
 -- Checking whether CXX compiler has -isysroot
@@ -945,20 +958,5 @@ Final HF Energy: -74.9659010585405
 Freed Memory
 Omp Time: 0.010108
 Omp Speedup: 1.15136525524337
-
-[Process exited 0]
-
 ```
-
-# Results
-
-The final energy produced from the present work yielded -74.965901 Ha while
-Psi4 on the same geometry and basis set with default options yields -74.965990
-Ha. The difference between these two energies is likely due to me not
-implementing a cutoff threshold for the commutator of the density and Fock
-matrix for checking convergence, along with me not using density fitting like
-Psi4. The speedup from adding 4 Omp threads is quite underwhelming at 1.15;
-however, it is likely due to the size of the system not being large enough and
-only calling OMP threads for a few of the steps while mostly remaining serial
-besides the eigensolvers.
 
