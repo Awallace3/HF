@@ -10,6 +10,7 @@
 #include <vector>
 
 using namespace std;
+
 void HF_og() {
   // Specify Data Path
   /* std::string dataPath = "data/t1"; */
@@ -131,30 +132,30 @@ void HF(
 
   H = new Eigen::MatrixXd(T->rows(), T->cols());
   *H = *T + *V;
-  cout << endl << "H Matrix: " << endl << endl << *H << endl;
+  /* cout << endl << "H Matrix: " << endl << endl << *H << endl; */
 
   // Orthogonalization of S
-  cout << endl << "S Matrix: " << endl << endl << *S << endl;
+  /* cout << endl << "S Matrix: " << endl << endl << *S << endl; */
   S_12 = new Eigen::MatrixXd(S->rows(), S->cols());
   helper::orthoS(S, S_12);
-  cout << endl << "S_12 Matrix: " << endl << endl << *S_12 << endl;
+  /* cout << endl << "S_12 Matrix: " << endl << endl << *S_12 << endl; */
 
   // Build initial Fock Matrix
   F = new Eigen::MatrixXd(H->rows(), H->cols());
   *F = (*S_12).transpose() * *H * (*S_12);
-  cout << endl << "F Matrix: " << endl << endl << *F << endl;
+  /* cout << endl << "F Matrix: " << endl << endl << *F << endl; */
 
   C_0_prime = new Eigen::MatrixXd(H->rows(), H->cols());
   helper::getC_0_prime(F, C_0_prime);
-  cout << endl << "C_0_prime Matrix: " << endl << endl << *C_0_prime << endl;
+  /* cout << endl << "C_0_prime Matrix: " << endl << endl << *C_0_prime << endl; */
 
   C = new Eigen::MatrixXd(H->rows(), H->cols());
   *C = (*S_12) * (*C_0_prime);
-  cout << endl << "C Matrix: " << endl << endl << *C << endl;
+  /* cout << endl << "C Matrix: " << endl << endl << *C << endl; */
 
   D = new Eigen::MatrixXd(H->rows(), H->cols());
   helper::updateDensityMatrix(C, D, num_electrons);
-  cout << endl << "D Matrix: " << endl << endl << *D << endl;
+  /* cout << endl << "D Matrix: " << endl << endl << *D << endl; */
 
   helper::SCF(eri, S_12, H, F, C, D, C_0_prime, num_electrons, &E, e_nuc, t1,
               t2);
@@ -213,8 +214,54 @@ void timings() {
   cout << "Omp Time: " << (double)(omp_t / CLOCKS_PER_SEC) << endl;
   cout << "Omp Speedup: " << (double)(serial_t / omp_t) << endl;
 }
+void timings_parrallel() {
+  /* std::string dataPath = "data/t1"; */
+  std::string dataPath = "data/t3";
+  int num_atoms;
+  double E = 0, e_nuc = 0;
+  time_t start, end;
+  double serial_t;
+      double itime, ftime, exec_time;
+
+    // Required code for which execution time needs to be computed
+
+  std::vector<int> *elements = nullptr;
+  std::vector<double> *eri = nullptr;
+
+  Eigen::MatrixXd *coords = nullptr;
+  Eigen::MatrixXd *T = nullptr;
+  Eigen::MatrixXd *V = nullptr;
+  Eigen::MatrixXd *S = nullptr;
+  input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &S,
+                    &e_nuc);
+  omp_set_num_threads(1);
+  Eigen::setNbThreads(1);
+  start = clock();
+  HF(num_atoms, E, e_nuc, elements, eri, coords, T, V, S);
+  end = clock();
+  serial_t = (double)(end - start);
+  cout << "Serial Time: " << (serial_t / CLOCKS_PER_SEC) << endl;
+
+  input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &S,
+                    &e_nuc);
+  double omp_t;
+  int num_threads = 10;
+  omp_set_num_threads(num_threads);
+  Eigen::setNbThreads(num_threads);
+  start = clock();
+  itime = omp_get_wtime();
+  HF(num_atoms, E, e_nuc, elements, eri, coords, T, V, S);
+  end = clock();
+  ftime = omp_get_wtime();
+  omp_t = (double)(end - start);
+  cout << "Omp Time: " << (double)(omp_t / CLOCKS_PER_SEC) << endl;
+    exec_time = ftime - itime;
+    printf("\n\nTime taken is %f\n", exec_time);
+  cout << "Omp Speedup: " << ((double)( serial_t) / exec_time) << endl;
+}
 
 int main() {
-    timings();
+    /* timings(); */
+    timings_parrallel();
   return 0;
 }
