@@ -123,15 +123,11 @@ void input::readERI(std::string fn, std::vector<double> **arr, int n_basis) {
   }
   file.clear();
   file.seekg(0);
-  int arrSize =
-      /* n_basis * (n_basis + 1) / 2  * (n_basis + 2) / 2 * (n_basis  + 3) / 2 ;
-       */
-      /* n_basis * n_basis * n_basis * n_basis / 8; */
-      /* helper::indexIJKL(n_basis, n_basis, n_basis, n_basis); */
-      helper::indexIJKL(n_basis - 1, n_basis - 1, n_basis - 1, n_basis - 1) + 1;
+  /* int arrSize = */
+      /* helper::indexIJKL(n_basis - 1, n_basis - 1, n_basis - 1, n_basis - 1) + 1; */
 
-  cout << "arrSize: " << arrSize << endl;
-  cout << "count: " << count << endl;
+  /* cout << "arrSize: " << arrSize << endl; */
+  /* cout << "count: " << count << endl; */
 
   *arr = new std::vector<double>(count);
 
