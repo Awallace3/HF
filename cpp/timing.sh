@@ -13,7 +13,7 @@ export dp="data/"
 export dn="t1"
 export fn=$dp$dn
 
-echo "Timing for $fn" > outputs/$dn.out
+echo "\nTiming for $fn\n" > outputs/$dn.out
 for i in 1 2 4 6 8 10
 do
     export OMP_NUM_THREADS=$i

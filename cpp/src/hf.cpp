@@ -200,7 +200,7 @@ void timings(std::string dataPath, int num_threads) {
   exec_time = ftime - itime;
 
   cout << "Time (CPU) : " << (double)(totTime / CLOCKS_PER_SEC) << endl;
-  cout << "Time (USR) : " << exec_time << endl;
+  cout << "Time (USR) : " << exec_time << endl << endl ;
 }
 
 void timings_parrallel(std::string dataPath, int num_threads) {
@@ -255,7 +255,7 @@ void timings_parrallel(std::string dataPath, int num_threads) {
 }
 
 int main(int argc, char *argv[]) {
-  printf("Running: %s\n", argv[0]);
+  printf("\nRunning: %s\n\n", argv[0]);
   if (argc == 1) {
     printf("You must pass a data path and number of threads like "
            "below:\n\t./hf data/t1 4\n");
