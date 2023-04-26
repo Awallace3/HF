@@ -96,23 +96,17 @@ void HF_og() {
   printf("\nFreed Memory\n");
 }
 
-void HF(
-  int num_atoms,
-  double E = 0,
-  double e_nuc = 0,
-  std::vector<int> *elements = nullptr,
-  std::vector<double> *eri = nullptr,
-  Eigen::MatrixXd *coords = nullptr,
-  Eigen::MatrixXd *T = nullptr,
-  Eigen::MatrixXd *V = nullptr,
-  Eigen::MatrixXd *S = nullptr
+void HF(int num_atoms, double E = 0, double e_nuc = 0,
+        std::vector<int> *elements = nullptr,
+        std::vector<double> *eri = nullptr, Eigen::MatrixXd *coords = nullptr,
+        Eigen::MatrixXd *T = nullptr, Eigen::MatrixXd *V = nullptr,
+        Eigen::MatrixXd *S = nullptr
 
-        ) {
+) {
   // Specify Data Path
   /* std::string dataPath = "data/t1"; */
   std::string dataPath = "data/t0";
   double t1 = 1e-8, t2 = 1e-8;
-
 
   // Starting HF Code
   // Allocate Memory for Matrices
@@ -147,7 +141,8 @@ void HF(
 
   C_0_prime = new Eigen::MatrixXd(H->rows(), H->cols());
   helper::getC_0_prime(F, C_0_prime);
-  /* cout << endl << "C_0_prime Matrix: " << endl << endl << *C_0_prime << endl; */
+  /* cout << endl << "C_0_prime Matrix: " << endl << endl << *C_0_prime << endl;
+   */
 
   C = new Eigen::MatrixXd(H->rows(), H->cols());
   *C = (*S_12) * (*C_0_prime);
@@ -215,16 +210,16 @@ void timings() {
   cout << "Omp Speedup: " << (serial_t / omp_t) << endl;
 }
 
-void timings_parrallel() {
+void timings_parrallel(std::string dataPath, int num_threads) {
   /* std::string dataPath = "data/t1"; */
-  std::string dataPath = "data/t1";
+  /* std::string dataPath = "data/t1"; */
   int num_atoms;
   double E = 0, e_nuc = 0;
   time_t start, end;
   double serial_t;
   double itime, ftime, exec_time;
 
-    // Required code for which execution time needs to be computed
+  // Required code for which execution time needs to be computed
 
   std::vector<int> *elements = nullptr;
   std::vector<double> *eri = nullptr;
@@ -240,13 +235,13 @@ void timings_parrallel() {
   start = clock();
   HF(num_atoms, E, e_nuc, elements, eri, coords, T, V, S);
   end = clock();
-  serial_t = (double)(end - start) / CLOCKS_PER_SEC ;
+  serial_t = (double)(end - start) / CLOCKS_PER_SEC;
   cout << "Serial Time: " << serial_t << endl;
 
   input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &S,
                     &e_nuc);
   double omp_t;
-  int num_threads = 10;
+  /* int num_threads = 10; */
   omp_set_num_threads(num_threads);
   Eigen::setNbThreads(num_threads);
   start = clock();
@@ -255,9 +250,9 @@ void timings_parrallel() {
   ftime = omp_get_wtime();
   end = clock();
   omp_t = (double)(end - start);
-exec_time = ftime - itime;
-  double ompSpeedUp =  serial_t / exec_time;
-  double eff =  serial_t / (exec_time * num_threads) ;
+  exec_time = ftime - itime;
+  double ompSpeedUp = serial_t / exec_time;
+  double eff = serial_t / (exec_time * num_threads);
 
   cout << "Serial Time (CPU) : " << serial_t << endl;
   cout << "OMP    Time (CPU) : " << (double)(omp_t / CLOCKS_PER_SEC) << endl;
@@ -266,21 +261,22 @@ exec_time = ftime - itime;
   cout << "Parallel Efficieny: " << eff << endl;
 }
 
-int main(int argc, char* argv[]) {
-    /* timings(); */
-    printf("Running: %s", argv[0]);
-    if (argc == 1){
-        printf("You must pass a data path and number of threads like below:\n\t./hf data/t1 4\n")
-    }
-    std::string dataPath = "";
-    int numThreads = 1;
-    if (argc >= 2) {
-        for (int i=1; i < argc; i++){
-            numThreads;
+int main(int argc, char *argv[]) {
+  printf("Running: %s\n", argv[0]);
+  if (argc == 1) {
+    printf("You must pass a data path and number of threads like "
+           "below:\n\t./hf data/t1 4\n");
+    return 1;
+  }
+  std::string dataPath = "";
+  int numThreads = 1;
+  if (argc >= 2) {
+    dataPath = argv[1];
+    numThreads = atoi(argv[2]);
+  }
+  cout << "Data Path: " << dataPath << endl;
+  cout << "Num Threads: " << numThreads << endl;
+  timings_parrallel(dataPath, numThreads);
 
-        }
-   }
-
-    timings_parrallel();
   return 0;
 }
