@@ -29,6 +29,7 @@
 # Executables
 *.exe
 *.out
+!cpp/outputs/*.out
 *.app
 .ccls-cache/
 cpp/.ccls-cache

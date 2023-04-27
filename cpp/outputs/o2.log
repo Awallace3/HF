@@ -1,0 +1,96 @@
+-- The CXX compiler identification is GNU 11.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found OpenMP_CXX: -fopenmp (found version "4.5") 
+-- Found OpenMP: TRUE (found version "4.5")  
+-- Looking for sgemm_
+-- Looking for sgemm_ - not found
+-- Looking for C++ include pthread.h
+-- Looking for C++ include pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+-- Looking for sgemm_
+-- Looking for sgemm_ - found
+-- Found BLAS: /usr/lib/x86_64-linux-gnu/libblas.so  
+-- Looking for cheev_
+-- Looking for cheev_ - not found
+-- Looking for cheev_
+-- Looking for cheev_ - not found
+-- Looking for cheev_
+-- Looking for cheev_ - found
+-- Found LAPACK: /usr/lib/x86_64-linux-gnu/liblapack.so;/usr/lib/x86_64-linux-gnu/libblas.so  
+-- Found MPI_CXX: /usr/lib/x86_64-linux-gnu/openmpi/lib/libmpi_cxx.so (found version "3.1") 
+-- Found MPI: TRUE (found version "3.1")  
+-- Found OpenMP_CXX: -fopenmp (found version "4.5") 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /theoryfs2/ds/amwalla3/gits/HF/cpp/build
+[ 25%] Building CXX object src/CMakeFiles/hf.dir/hf.cpp.o
+[ 50%] Building CXX object src/CMakeFiles/hf.dir/input.cpp.o
+[ 75%] Building CXX object src/CMakeFiles/hf.dir/helper.cpp.o
+[100%] Linking CXX executable hf
+[100%] Built target hf
+n_basis: 82
+arrSize: 5791906
+count: 5883787
+iter: 0 Energy: -97.0923 Delta E: -97.0923
+iter: 1 Energy: -98.28 Delta E: -1.18774
+iter: 2 Energy: -107.398 Delta E: -9.11804
+iter: 3 Energy: -105.85 Delta E: 1.5485
+iter: 4 Energy: -109.396 Delta E: -3.54656
+iter: 5 Energy: -107.579 Delta E: 1.81723
+iter: 6 Energy: -110.004 Delta E: -2.42545
+iter: 7 Energy: -110.756 Delta E: -0.75169
+iter: 8 Energy: -111.276 Delta E: -0.52038
+iter: 9 Energy: -111.42 Delta E: -0.143198
+iter: 10 Energy: -111.448 Delta E: -0.0283181
+iter: 11 Energy: -111.453 Delta E: -0.00491031
+iter: 12 Energy: -111.454 Delta E: -0.000809715
+iter: 13 Energy: -111.454 Delta E: -0.000131563
+iter: 14 Energy: -111.454 Delta E: -2.12882e-05
+iter: 15 Energy: -111.454 Delta E: -3.44269e-06
+iter: 16 Energy: -111.454 Delta E: -5.57065e-07
+iter: 17 Energy: -111.454 Delta E: -9.02316e-08
+iter: 18 Energy: -111.454 Delta E: -1.46336e-08
+iter: 19 Energy: -111.454 Delta E: -2.37615e-09
+
+Final HF Energy: -78.0435868316762
+
+Freed Memory
+Serial Time: 209.941765
+n_basis: 82
+arrSize: 5791906
+count: 5883787
+iter: 0 Energy: -97.0922623138565 Delta E: -97.0922623138565
+iter: 1 Energy: -98.2800005888971 Delta E: -1.18773827504062
+iter: 2 Energy: -107.398038062945 Delta E: -9.11803747404765
+iter: 3 Energy: -105.849538172098 Delta E: 1.54849989084654
+iter: 4 Energy: -109.396093661497 Delta E: -3.54655548939895
+iter: 5 Energy: -107.57886804906 Delta E: 1.81722561243664
+iter: 6 Energy: -110.004319588654 Delta E: -2.42545153959303
+iter: 7 Energy: -110.756009651898 Delta E: -0.751690063244823
+iter: 8 Energy: -111.276389323806 Delta E: -0.520379671907946
+iter: 9 Energy: -111.419587006367 Delta E: -0.143197682560469
+iter: 10 Energy: -111.447905126544 Delta E: -0.028318120177488
+iter: 11 Energy: -111.452815438371 Delta E: -0.00491031182676238
+iter: 12 Energy: -111.453625153107 Delta E: -0.000809714735567013
+iter: 13 Energy: -111.453756716559 Delta E: -0.000131563452299588
+iter: 14 Energy: -111.453778004709 Delta E: -2.12881500942785e-05
+iter: 15 Energy: -111.4537814474 Delta E: -3.44269096785865e-06
+iter: 16 Energy: -111.453782004465 Delta E: -5.57064836925747e-07
+iter: 17 Energy: -111.453782094696 Delta E: -9.02316088513544e-08
+iter: 18 Energy: -111.45378210933 Delta E: -1.4633641853834e-08
+iter: 19 Energy: -111.453782111706 Delta E: -2.37615438436478e-09
+
+Final HF Energy: -78.0435868316762
+
+Freed Memory
+Serial Time (CPU) : 209.941765
+OMP    Time (CPU) : 238.08719
+OMP    Time (USR) : 31.4196809479035
+Omp Speedup       : 6.68185540610998
+Parallel Efficieny: 0.668185540610998

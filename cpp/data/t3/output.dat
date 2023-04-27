@@ -3,8 +3,8 @@
     Name: AUG-CC-PVDZ
     Role: ORBITAL
     Keyword: BASIS
-    atoms 1-4 entry H          line    40 file /Users/austinwallace/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz.gbs
-    atoms 5-6 entry C          line   182 file /Users/austinwallace/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz.gbs
+    atoms 1-4 entry H          line    40 file /Users/austinwallace/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz.gbs 
+    atoms 5-6 entry C          line   182 file /Users/austinwallace/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz.gbs 
 
 
 Scratch directory: /tmp/
@@ -17,8 +17,8 @@ Scratch directory: /tmp/
     Name: AUG-CC-PVDZ
     Role: ORBITAL
     Keyword: BASIS
-    atoms 1-4 entry H          line    40 file /theoryfs2/ds/amwalla3/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz.gbs
-    atoms 5-6 entry C          line   182 file /theoryfs2/ds/amwalla3/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz.gbs
+    atoms 1-4 entry H          line    40 file /Users/austinwallace/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz.gbs 
+    atoms 5-6 entry C          line   182 file /Users/austinwallace/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz.gbs 
 
 
          ---------------------------------------------------------
@@ -36,7 +36,7 @@ Scratch directory: /tmp/
 
     Geometry (in Angstrom), charge = 0, multiplicity = 1:
 
-       Center              X                  Y                   Z               Mass
+       Center              X                  Y                   Z               Mass       
     ------------   -----------------  -----------------  -----------------  -----------------
          H           -0.923387110400    -0.000000000000     1.228608866900     1.007825032230
          H            0.923387110400     0.000000000000     1.228608866900     1.007825032230
@@ -49,7 +49,6 @@ Scratch directory: /tmp/
 
   Rotational constants: A =      4.90438  B =      1.00641  C =      0.83505 [cm^-1]
   Rotational constants: A = 147029.49009  B =  30171.46419  C =  25034.26132 [MHz]
-  Nuclear repulsion =   33.410195280030003
   Nuclear repulsion =   33.410195280029996
 
   Charge       = 0
@@ -84,8 +83,8 @@ Scratch directory: /tmp/
     Name: (AUG-CC-PVDZ AUX)
     Role: JKFIT
     Keyword: DF_BASIS_SCF
-    atoms 1-4 entry H          line    70 file /theoryfs2/ds/amwalla3/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz-jkfit.gbs
-    atoms 5-6 entry C          line   154 file /theoryfs2/ds/amwalla3/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz-jkfit.gbs
+    atoms 1-4 entry H          line    70 file /Users/austinwallace/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz-jkfit.gbs 
+    atoms 5-6 entry C          line   154 file /Users/austinwallace/miniconda3/envs/qcn/share/psi4/basis/aug-cc-pvdz-jkfit.gbs 
 
   ==> Integral Setup <==
 
@@ -122,16 +121,16 @@ Scratch directory: /tmp/
   SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF (no occupation information).
 
    -------------------------
-    Irrep   Nso     Nmo
+    Irrep   Nso     Nmo    
    -------------------------
-     Ag        18      18
-     B1g        4       4
-     B2g       12      12
-     B3g        7       7
-     Au         4       4
-     B1u       18      18
-     B2u        7       7
-     B3u       12      12
+     Ag        18      18 
+     B1g        4       4 
+     B2g       12      12 
+     B3g        7       7 
+     Au         4       4 
+     B1u       18      18 
+     B2u        7       7 
+     B3u       12      12 
    -------------------------
     Total      82      82
    -------------------------
@@ -140,7 +139,7 @@ Scratch directory: /tmp/
 
                            Total Energy        Delta E     RMS |[F,P]|
 
-   @DF-RHF iter SAD:   -77.25826790776554   -7.72583e+01   0.00000e+00
+   @DF-RHF iter SAD:   -77.25826790776554   -7.72583e+01   0.00000e+00 
    @DF-RHF iter   1:   -77.96631370784441   -7.08046e-01   1.06683e-02 ADIIS/DIIS
    @DF-RHF iter   2:   -78.03237086331566   -6.60572e-02   4.22664e-03 ADIIS/DIIS
    @DF-RHF iter   3:   -78.04297292877692   -1.06021e-02   6.85165e-04 ADIIS/DIIS
@@ -155,42 +154,42 @@ Scratch directory: /tmp/
     Orbital Energies [Eh]
     ---------------------
 
-    Doubly Occupied:
+    Doubly Occupied:                                                      
 
-       1Ag   -11.239090     1B1u  -11.237419     2Ag    -1.036602
-       2B1u   -0.794250     1B3u   -0.644773     3Ag    -0.587208
-       1B2g   -0.507994     1B2u   -0.376450
+       1Ag   -11.239090     1B1u  -11.237419     2Ag    -1.036602  
+       2B1u   -0.794250     1B3u   -0.644773     3Ag    -0.587208  
+       1B2g   -0.507994     1B2u   -0.376450  
 
-    Virtual:
+    Virtual:                                                              
 
-       4Ag     0.040441     3B1u    0.050356     2B3u    0.051292
-       2B2g    0.070802     1B3g    0.102147     2B2u    0.120576
-       5Ag     0.127485     4B1u    0.146952     3B3u    0.177392
-       6Ag     0.178526     3B2g    0.206309     2B3g    0.209164
-       5B1u    0.223815     7Ag     0.251326     4B3u    0.295598
-       1B1g    0.326808     6B1u    0.329390     1Au     0.403061
-       8Ag     0.408581     7B1u    0.413833     3B2u    0.439986
-       4B2g    0.451864     5B3u    0.470895     9Ag     0.532143
-       5B2g    0.540730     3B3g    0.548856     6B3u    0.558898
-      10Ag     0.602032     4B2u    0.608750     7B3u    0.616428
-       8B1u    0.617529     6B2g    0.631860    11Ag     0.638887
-       2B1g    0.652648     9B1u    0.694103     4B3g    0.728866
-      10B1u    0.730172    11B1u    0.801142     2Au     0.847475
-       5B2u    0.884178     7B2g    0.889678    12Ag     1.001594
-       5B3g    1.088648     8B3u    1.183339    12B1u    1.234402
-       8B2g    1.286818    13Ag     1.445884     9B3u    1.452632
-       6B2u    1.514005     3B1g    1.522686    13B1u    1.621080
-      14Ag     1.691942     9B2g    1.769362     3Au     1.791951
-      15Ag     1.852302     6B3g    1.882490    10B3u    1.957391
-      16Ag     2.017802    14B1u    2.062466     7B2u    2.093140
-      10B2g    2.120115    15B1u    2.127371     4B1g    2.145194
-      11B3u    2.177113     7B3g    2.387482     4Au     2.447512
-      16B1u    2.474351    17Ag     2.634356    11B2g    2.681639
-      17B1u    2.798199    18Ag     2.820439    12B3u    2.904215
-      18B1u    3.433021    12B2g    3.495734
+       4Ag     0.040441     3B1u    0.050356     2B3u    0.051292  
+       2B2g    0.070802     1B3g    0.102147     2B2u    0.120576  
+       5Ag     0.127485     4B1u    0.146952     3B3u    0.177392  
+       6Ag     0.178526     3B2g    0.206309     2B3g    0.209164  
+       5B1u    0.223815     7Ag     0.251326     4B3u    0.295598  
+       1B1g    0.326808     6B1u    0.329390     1Au     0.403061  
+       8Ag     0.408581     7B1u    0.413833     3B2u    0.439986  
+       4B2g    0.451864     5B3u    0.470895     9Ag     0.532143  
+       5B2g    0.540730     3B3g    0.548856     6B3u    0.558898  
+      10Ag     0.602032     4B2u    0.608750     7B3u    0.616428  
+       8B1u    0.617529     6B2g    0.631860    11Ag     0.638887  
+       2B1g    0.652648     9B1u    0.694103     4B3g    0.728866  
+      10B1u    0.730172    11B1u    0.801142     2Au     0.847475  
+       5B2u    0.884178     7B2g    0.889678    12Ag     1.001594  
+       5B3g    1.088648     8B3u    1.183339    12B1u    1.234402  
+       8B2g    1.286818    13Ag     1.445884     9B3u    1.452632  
+       6B2u    1.514005     3B1g    1.522686    13B1u    1.621080  
+      14Ag     1.691942     9B2g    1.769362     3Au     1.791951  
+      15Ag     1.852302     6B3g    1.882490    10B3u    1.957391  
+      16Ag     2.017802    14B1u    2.062466     7B2u    2.093140  
+      10B2g    2.120115    15B1u    2.127371     4B1g    2.145194  
+      11B3u    2.177113     7B3g    2.387482     4Au     2.447512  
+      16B1u    2.474351    17Ag     2.634356    11B2g    2.681639  
+      17B1u    2.798199    18Ag     2.820439    12B3u    2.904215  
+      18B1u    3.433021    12B2g    3.495734  
 
     Final Occupation by Irrep:
-             Ag   B1g   B2g   B3g    Au   B1u   B2u   B3u
+             Ag   B1g   B2g   B3g    Au   B1u   B2u   B3u 
     DOCC [     3,    0,    1,    0,    0,    2,    1,    1 ]
 
   @DF-RHF Final Energy:   -78.04351011941793

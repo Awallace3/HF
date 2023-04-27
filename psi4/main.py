@@ -21,17 +21,11 @@ def psi4_compute(mol, outdata="t2"):
     mints = psi4.core.MintsHelper(wfn.basisset())
     S = np.asarray(mints.ao_overlap())
     np.savetxt(f"{outdata}/S.csv", S, delimiter=" ")
-    # print(f"{S = }")
     T = np.asarray(mints.ao_potential())
     np.savetxt(f"{outdata}/T.csv", T, delimiter=" ")
-    # print(f"{T = }")
     V = np.asarray(mints.ao_kinetic())
     np.savetxt(f"{outdata}/V.csv", V, delimiter=" ")
 
-    # TODO e1?
-    # e1 = np.asarray(mints.ao_oei_deriv2)
-    # np.savetxt(f"{outdata}/e1.csv", e1, delimiter=" ")
-    # print(f"{V = }")
     I = np.asarray(mints.ao_eri())
     nbf = len(I)
     print(f"{nbf = }")
@@ -41,9 +35,7 @@ def psi4_compute(mol, outdata="t2"):
             for j in range(i + 1):
                 for k in range(i + 1):
                     for l in range(k + 1):
-                        # print(i, j, k, l, I[i,j,k,l])
                         line = f"{i} {j} {k} {l} {I[i,j,k,l]}\n"
-                        # line = f"{i} {j} {k} {l}\n"
                         f.write(line)
 
     e = psi4.energy("HF/aug-cc-pvdz")
@@ -85,15 +77,9 @@ def benzene():
 """
 
 def main():
-    # mol = qcel.models.Molecule.from_file("t1/t1.xyz")
-    d = find_geoms(6)
-
+    d = find_geoms(6) # Ethene
     # return
     # d = benzene()
-    # fn = "t1/t1.xyz"
-    # with open(fn, "r") as f:
-    #     d = "".join(f.readlines()[2:])
-    #     print(d)
     psi4_compute(d, outdata="t3")
     return
 
