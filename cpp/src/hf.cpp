@@ -104,8 +104,6 @@ void HF(int num_atoms, double E = 0, double e_nuc = 0,
 
 ) {
   // Specify Data Path
-  /* std::string dataPath = "data/t1"; */
-  std::string dataPath = "data/t0";
   double t1 = 1e-8, t2 = 1e-8;
 
   // Starting HF Code

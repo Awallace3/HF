@@ -3,26 +3,42 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def hf_timings1(datapath="../outputs/t1.out", fn="images/t1.png") -> None:
+def hf_timings1(datapath="../outputs/t1.out", fn="images/t1.png", title="Water") -> None:
     """
     hf_timings1 plots t1 and t3 timings for speed up and efficiency
     """
     # Read datapath
     with open(datapath, "r") as f:
         d = f.readlines()
-    serial_time = 0
     threads = []
-    omp_time = []
+    times = []
     for l in d:
-        print(l)
-        if "Serial" in l:
-            serial_time = float(l.split()[-1])
-        elif "OMP" in l:
-            threads.append(int(l.split()[1]))
-            omp_time.append(float(l.split()[-1]))
-    print(serial_time)
+        if "Time (USR)" in l:
+            times.append(float(l.split()[-1]))
+        if "Num Threads: " in l:
+            threads.append(int(l.split()[-1]))
+    threads.pop(0)
+    serial_time = times.pop(0)
+    speedup = [serial_time / t for t in times]
+    efficiency = [serial_time / (t * n) for t, n in zip(times, threads)]
     print(threads)
-    print(omp_time)
+    print(times)
+    print(speedup)
+    print(efficiency)
+    c1 = "tab:blue"
+    c2 = "tab:orange"
+    fix, ax1 = plt.subplots(dpi=300)
+    ax1.plot(threads, speedup, "-o", label="Speed Up", color=c1)
+    ax1.tick_params(axis="y", labelcolor=c1)
+
+    ax2 = ax1.twinx()
+    ax2.plot(threads, efficiency, "-o", label="Efficiency", color=c2)
+    ax2.tick_params(axis="y", labelcolor=c2)
+    ax1.set_xlabel("Number of Threads")
+    ax1.set_ylabel("Speed Up", color=c1)
+    ax2.set_ylabel("Efficiency", color=c2)
+    plt.title(f"Speed Up and Efficiency: {title}")
+    plt.savefig(fn)
     return
 
 
@@ -112,7 +128,8 @@ def fig7() -> None:
 def main():
     # fig2()
     # fig7()
-    hf_timings1(datapath="../outputs/t1.out", fn="images/t1.png")
+    hf_timings1(datapath="../outputs/t1.out", fn="images/t1.png", title="Water HF/STO-3G")
+    hf_timings1(datapath="../outputs/t3.out", fn="images/t3.png", title="Ethene HF/aug-cc-pVDZ")
     return
 
 
