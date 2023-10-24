@@ -2,7 +2,8 @@
 #include "input.hpp"
 #include "omp.h"
 #include "stdio.h"
-#include <Eigen/Dense>
+/* #include <Eigen/Dense> */
+#include <eigen3/Eigen/Dense>
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -12,10 +13,12 @@
 using namespace std;
 
 void HF_og() {
+
   // Specify Data Path
   /* std::string dataPath = "data/t1"; */
   std::string dataPath = "data/t0";
   double t1 = 1e-8, t2 = 1e-8;
+
 
   // Make pointers to store input data
   int num_atoms;

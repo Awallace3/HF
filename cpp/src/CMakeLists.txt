@@ -1,4 +1,3 @@
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(hf hf.cpp input.cpp helper.cpp)
 target_include_directories(hf PUBLIC ${CMAKE_SOURCE_DIR}/include
     /usr/local/include

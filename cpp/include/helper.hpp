@@ -2,7 +2,7 @@
 #define HELPER_HPP 1
 
 #include "stdio.h"
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include <vector>
 
 namespace helper {

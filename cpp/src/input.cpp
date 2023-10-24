@@ -1,6 +1,6 @@
 #include "input.hpp"
 #include "helper.hpp"
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include <algorithm>
 #include <fstream>
 #include <iostream>

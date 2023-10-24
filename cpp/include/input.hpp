@@ -2,7 +2,7 @@
 #define INPUT_HPP 1
 
 #include "stdio.h"
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include <string>
 #include <vector>
 #include "helper.hpp"
