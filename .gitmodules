@@ -1,0 +1,3 @@
+[submodule "cpp/magma"]
+	path = cpp/magma
+	url = https://bitbucket.org/icl/magma.git
