@@ -3,6 +3,8 @@
 #include <eigen3/Eigen/Dense>
 #include <iostream>
 #include <vector>
+#include "magma_v2.h"
+#include "magma_lapack.h"
 
 using namespace Eigen;
 using namespace std;
