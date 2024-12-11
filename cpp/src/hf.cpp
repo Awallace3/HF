@@ -127,31 +127,30 @@ void HF(int num_atoms, double E = 0, double e_nuc = 0,
 
   H = new Eigen::MatrixXd(T->rows(), T->cols());
   *H = *T + *V;
-  /* cout << endl << "H Matrix: " << endl << endl << *H << endl; */
+  cout << endl << "H Matrix: " << endl << endl << *H << endl; 
 
   // Orthogonalization of S
-  /* cout << endl << "S Matrix: " << endl << endl << *S << endl; */
+  cout << endl << "S Matrix: " << endl << endl << *S << endl; 
   S_12 = new Eigen::MatrixXd(S->rows(), S->cols());
   helper::orthoS(S, S_12);
-  /* cout << endl << "S_12 Matrix: " << endl << endl << *S_12 << endl; */
+  cout << endl << "S_12 Matrix: " << endl << endl << *S_12 << endl;
 
   // Build initial Fock Matrix
   F = new Eigen::MatrixXd(H->rows(), H->cols());
   *F = (*S_12).transpose() * *H * (*S_12);
-  /* cout << endl << "F Matrix: " << endl << endl << *F << endl; */
+  cout << endl << "F Matrix: " << endl << endl << *F << endl; 
 
   C_0_prime = new Eigen::MatrixXd(H->rows(), H->cols());
   helper::getC_0_prime(F, C_0_prime);
-  /* cout << endl << "C_0_prime Matrix: " << endl << endl << *C_0_prime << endl;
-   */
+  cout << endl << "C_0_prime Matrix: " << endl << endl << *C_0_prime << endl;
 
   C = new Eigen::MatrixXd(H->rows(), H->cols());
   *C = (*S_12) * (*C_0_prime);
-  /* cout << endl << "C Matrix: " << endl << endl << *C << endl; */
+  cout << endl << "C Matrix: " << endl << endl << *C << endl;
 
   D = new Eigen::MatrixXd(H->rows(), H->cols());
   helper::updateDensityMatrix(C, D, num_electrons);
-  /* cout << endl << "D Matrix: " << endl << endl << *D << endl; */
+  cout << endl << "D Matrix: " << endl << endl << *D << endl;
 
   helper::SCF(eri, S_12, H, F, C, D, C_0_prime, num_electrons, &E, e_nuc, t1,
               t2);

@@ -41,6 +41,6 @@ find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
 # find_package(BLAS REQUIRED)
 # find_package(LAPACK REQUIRED)
-find_package(MPI REQUIRED)
+# find_package(MPI REQUIRED)
 
 add_subdirectory(src)
