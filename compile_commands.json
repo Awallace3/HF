@@ -1,12 +1,20 @@
 [
 {
-  "directory": "/Users/austinwallace/gits/HF/cpp/build/src",
-  "command": "g++-12  -I/usr/local/include -I/Users/austinwallace/gits/HF/cpp/include  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -std=gnu++17 -o CMakeFiles/hf.dir/hf.cpp.o -c /Users/austinwallace/gits/HF/cpp/src/hf.cpp",
-  "file": "/Users/austinwallace/gits/HF/cpp/src/hf.cpp"
+  "directory": "/home/amwalla3/gits/hf/cpp/build/src",
+  "command": "/home/amwalla3/miniconda3/envs/p4dev311/bin/x86_64-conda-linux-gnu-c++  -I/home/amwalla3/gits/hf/cpp/include -I/usr/local/include -I/usr/local/include/eigen3 -I/usr/include/eigen3 -fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /home/amwalla3/miniconda3/envs/p4dev311/include -g -O0 -fopenmp -Wall -std=gnu++17 -o CMakeFiles/hf.dir/hf.cpp.o -c /home/amwalla3/gits/hf/cpp/src/hf.cpp",
+  "file": "/home/amwalla3/gits/hf/cpp/src/hf.cpp",
+  "output": "src/CMakeFiles/hf.dir/hf.cpp.o"
 },
 {
-  "directory": "/Users/austinwallace/gits/HF/cpp/build/src",
-  "command": "g++-12  -I/usr/local/include -I/Users/austinwallace/gits/HF/cpp/include  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -std=gnu++17 -o CMakeFiles/hf.dir/input.cpp.o -c /Users/austinwallace/gits/HF/cpp/src/input.cpp",
-  "file": "/Users/austinwallace/gits/HF/cpp/src/input.cpp"
+  "directory": "/home/amwalla3/gits/hf/cpp/build/src",
+  "command": "/home/amwalla3/miniconda3/envs/p4dev311/bin/x86_64-conda-linux-gnu-c++  -I/home/amwalla3/gits/hf/cpp/include -I/usr/local/include -I/usr/local/include/eigen3 -I/usr/include/eigen3 -fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /home/amwalla3/miniconda3/envs/p4dev311/include -g -O0 -fopenmp -Wall -std=gnu++17 -o CMakeFiles/hf.dir/input.cpp.o -c /home/amwalla3/gits/hf/cpp/src/input.cpp",
+  "file": "/home/amwalla3/gits/hf/cpp/src/input.cpp",
+  "output": "src/CMakeFiles/hf.dir/input.cpp.o"
+},
+{
+  "directory": "/home/amwalla3/gits/hf/cpp/build/src",
+  "command": "/home/amwalla3/miniconda3/envs/p4dev311/bin/x86_64-conda-linux-gnu-c++  -I/home/amwalla3/gits/hf/cpp/include -I/usr/local/include -I/usr/local/include/eigen3 -I/usr/include/eigen3 -fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /home/amwalla3/miniconda3/envs/p4dev311/include -g -O0 -fopenmp -Wall -std=gnu++17 -o CMakeFiles/hf.dir/helper.cpp.o -c /home/amwalla3/gits/hf/cpp/src/helper.cpp",
+  "file": "/home/amwalla3/gits/hf/cpp/src/helper.cpp",
+  "output": "src/CMakeFiles/hf.dir/helper.cpp.o"
 }
 ]
