@@ -186,6 +186,7 @@ void timings(std::string dataPath, int num_threads) {
   Eigen::MatrixXd *S = nullptr;
   input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &S,
                     &e_nuc);
+  cout << "S: " << endl << *S << endl;
   omp_set_num_threads(num_threads);
   Eigen::setNbThreads(num_threads);
   double totTime;
@@ -223,6 +224,7 @@ void timings_parrallel(std::string dataPath, int num_threads) {
   Eigen::MatrixXd *S = nullptr;
   input::gatherData(dataPath, num_atoms, &elements, &eri, &coords, &T, &V, &S,
                     &e_nuc);
+  // cout S
   omp_set_num_threads(1);
   Eigen::setNbThreads(1);
   start = clock();
