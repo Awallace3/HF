@@ -2,10 +2,8 @@
 #include "input.hpp"
 #include "omp.h"
 #include "stdio.h"
-/* #include <Eigen/Dense> */
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <ctime>
-#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -51,6 +49,7 @@ void HF_og() {
 
   // Set Number of Electrons for a Neutral Molecule
   helper::getNumberOfElectrons(num_atoms, elements, &num_electrons);
+  cout << "Number of Electrons: " << num_electrons << endl;
 
   H = new Eigen::MatrixXd(T->rows(), T->cols());
   *H = *T + *V;
@@ -124,6 +123,8 @@ void HF(int num_atoms, double E = 0, double e_nuc = 0,
 
   // Set Number of Electrons for a Neutral Molecule
   helper::getNumberOfElectrons(num_atoms, elements, &num_electrons);
+
+  cout << "Number of Electrons: " << num_electrons << endl;
 
   H = new Eigen::MatrixXd(T->rows(), T->cols());
   *H = *T + *V;
@@ -273,6 +274,7 @@ int main(int argc, char *argv[]) {
   cout << "Num Threads: " << numThreads << endl;
   cout.precision(15);
   /* timings_parrallel(dataPath, numThreads); */
+  HF_og();
   timings(dataPath, numThreads);
   return 0;
 }

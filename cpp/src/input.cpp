@@ -1,6 +1,6 @@
 #include "input.hpp"
 #include "helper.hpp"
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -123,8 +123,12 @@ void input::readERI(std::string fn, std::vector<double> **arr, int n_basis) {
   }
   file.clear();
   file.seekg(0);
-  /* int arrSize = */
-      /* helper::indexIJKL(n_basis - 1, n_basis - 1, n_basis - 1, n_basis - 1) + 1; */
+  // int arrSize =
+  //     /* n_basis * (n_basis + 1) / 2  * (n_basis + 2) / 2 * (n_basis  + 3) / 2 ;
+  //      */
+  //     /* n_basis * n_basis * n_basis * n_basis / 8; */
+  //     /* helper::indexIJKL(n_basis, n_basis, n_basis, n_basis); */
+  //     helper::indexIJKL(n_basis - 1, n_basis - 1, n_basis - 1, n_basis - 1) + 1;
 
   /* cout << "arrSize: " << arrSize << endl; */
   /* cout << "count: " << count << endl; */
@@ -189,7 +193,7 @@ void input::gatherData(std::string dataPath, int &num_atoms,
   std::string TFN = dataPath + "/T.csv";
   std::string VFN = dataPath + "/V.csv";
   std::string overlapFN = dataPath + "/S.csv";
-  std::string enucFN = dataPath + "/enuc.dat";
+  std::string enucFN = dataPath + "/enuc.csv";
   // Gathering Geometry
   input::readGeometry(geom, num_atoms, elements, coords);
 
