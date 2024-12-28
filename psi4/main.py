@@ -11,7 +11,7 @@ def psi4_compute(mol, outdata="t2", level_of_theory='HF/aug-cc-pvdz', mol_units=
         os.makedirs(outdata)
     with open(f"{outdata}/geom.xyz", 'w') as f:
         n = mol.count('\n')
-        f.write(f"{n}\n\n")
+        f.write(f"{n - 1}\n")
         f.write(mol)
 
     mol = psi4.geometry(mol)
@@ -24,11 +24,11 @@ def psi4_compute(mol, outdata="t2", level_of_theory='HF/aug-cc-pvdz', mol_units=
                                        psi4.core.get_global_option("basis"))
     mints = psi4.core.MintsHelper(wfn.basisset())
     S = np.asarray(mints.ao_overlap())
-    np.savetxt(f"{outdata}/S.csv", S, delimiter=" ")
+    np.savetxt(f"{outdata}/S.csv", S, delimiter=" ", fmt='%1.7f')
     T = np.asarray(mints.ao_potential())
-    np.savetxt(f"{outdata}/T.csv", T, delimiter=" ")
+    np.savetxt(f"{outdata}/T.csv", T, delimiter=" ", fmt='%1.7f')
     V = np.asarray(mints.ao_kinetic())
-    np.savetxt(f"{outdata}/V.csv", V, delimiter=" ")
+    np.savetxt(f"{outdata}/V.csv", V, delimiter=" ", fmt='%1.7f')
 
     I = np.asarray(mints.ao_eri())
     nbf = len(I)
@@ -36,16 +36,16 @@ def psi4_compute(mol, outdata="t2", level_of_theory='HF/aug-cc-pvdz', mol_units=
 
     enuc = mol.nuclear_repulsion_energy()
     print(f"{enuc = }")
-    with open(f"{outdata}/enuc.dat", 'w') as f:
+    with open(f"{outdata}/enuc.csv", 'w') as f:
         f.write(f"{enuc}")
 
 
     with open(f"{outdata}/eri.csv", 'w') as f:
         for i in range(nbf):
-            for j in range(i + 1):
-                for k in range(i + 1):
+            for k in range(i + 1):
+                for j in range(i + 1):
                     for l in range(k + 1):
-                        line = f"{i} {j} {k} {l} {I[i,j,k,l]}\n"
+                        line = f"{i} {j} {k} {l} {I[i,j,k,l]:.15f}\n"
                         f.write(line)
 
     e = psi4.energy(level_of_theory, molecule=mol)
