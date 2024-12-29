@@ -274,7 +274,7 @@ int main(int argc, char *argv[]) {
   cout << "Num Threads: " << numThreads << endl;
   cout.precision(15);
   /* timings_parrallel(dataPath, numThreads); */
-  HF_og();
+  // HF_og();
   timings(dataPath, numThreads);
   return 0;
 }

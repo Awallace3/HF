@@ -1,7 +1,6 @@
 import numpy as np
 import math
 import sys
-import re
 import pandas as pd
 
 
@@ -91,13 +90,36 @@ def read_inputs_cpp(input_dir):
     s, l1 = parse_input_cpp("%s/overlap.dat" % input_dir)
     t, l2 = parse_input_cpp("%s/T.dat" % input_dir)
     v, l3 = parse_input_cpp("%s/V.dat" % input_dir)
-    print('read')
+    print("read")
     print(s, t, v, sep="\n\n")
 
     if l2 != l3:
         print("T and V have different lengths. Fix your input files.")
         sys.exit()
     return enuc, s, t, v, l2
+
+def read_inputs_cpp_datapath(input_dir):
+    with open("%s/enuc.dat" % input_dir, "r") as fp:
+        enuc = float(fp.read().rstrip())
+    s = np.genfromtxt("%s/S.csv" % input_dir)
+    t = np.genfromtxt("%s/T.csv" % input_dir)
+    v = np.genfromtxt("%s/V.csv" % input_dir)
+    l1 = s.shape[0]
+    l2 = t.shape[0]
+    l3 = v.shape[0]
+    if l1 != l2:
+        print("T and V have different lengths. Fix your input files.")
+        sys.exit()
+    if l2 != l3:
+        print("T and V have different lengths. Fix your input files.")
+        sys.exit()
+    with open("%s/geom.xyz" % input_dir, "r") as fp:
+        lines = fp.readlines()
+        num_atoms = int(lines[0].rstrip())
+        elements = []
+        for i in range(2, num_atoms + 2):
+            elements.append(int(lines[i].split()[0]))
+    return enuc, s, t, v, l2, num_atoms, elements
 
 
 def print_2d_array(array, size):
@@ -108,11 +130,12 @@ def print_2d_array(array, size):
 
 
 def orthogonalization_of_basis_set(s):
-    # snippet from pentavalentcarbon, https://chemistry.stackexchange.com/questions/85484/how-to-do-lowdin-symmetric-orthonormalisation/85485
+    # snippet from pentavalentcarbon,
+    # https://chemistry.stackexchange.com/questions/85484/how-to-do-lowdin-symmetric-orthonormalisation/85485
     lam_s, l_s = np.linalg.eig(s)
     lam_s = lam_s * np.eye(len(lam_s))
-    lam_sqrt_inv = np.sqrt(np.linalg.inv(lam_s))
-    symm_orthog = np.dot(l_s, np.dot(lam_sqrt_inv, l_s.T))
+    lam_sqrt_inv = np.linalg.inv(np.sqrt(lam_s))
+    symm_orthog = np.matmul(l_s, np.matmul(lam_sqrt_inv, l_s.T))
     # end of snippet
     return symm_orthog
 
@@ -153,9 +176,9 @@ def Density_Matrix(C_0, e):
     # D_einsum = np.einsum("ij, ik->jk", C_0, C_0)
     D = np.zeros(np.shape(C_0))
     # D_mu,nu =
-    for m in range(occ):
-        for mu in range(len(D)):
-            for nu in range(len(D)):
+    for mu in range(len(D)):
+        for nu in range(len(D)):
+            for m in range(occ):
                 D[mu, nu] += C_0[mu, m] * C_0[nu, m]
     """
     #
@@ -198,12 +221,25 @@ def Index(x, y):
         return int((y * (y + 1) / 2) + x)
 
 
+def indexIJKL(i, j, k, l):
+    if j > i:
+        i, j = j, i
+    if l > k:
+        k, l = l, k
+    ij = i * (i - 1) // 2 + j
+    kl = k * (k - 1) // 2 + l
+    if kl > ij:
+        ij, kl = kl, ij
+    ijkl = ij * (ij - 1) // 2 + kl
+    return ijkl
+
+
 def read_two_e_repulsion(input_dir, size):
     # should be 4-D array but only giving into 1-d array
 
     eri = np.genfromtxt("%s/eri.dat" % input_dir)
     # M = ( 4 * size)
-    M = (size)**2
+    M = (size) ** 2
     one_d_size = int(M * (M + 1) / 2)
     eri_vals = np.zeros((one_d_size))
     for row in eri:
@@ -228,22 +264,14 @@ def read_two_e_repulsion(input_dir, size):
 def new_Fock_Matrix(H, D, eri, size):
     s = range(size)
     F = np.zeros(np.shape(H))
+    F = H.copy()  # can just copy H instead of initializing to 0 and adding H
     for i in s:
         for j in s:
             for k in s:
                 for l in s:
-                    ij = Index(i, j)
-                    kl = Index(k, l)
-                    ijkl = Index(ij, kl)
-                    ik = Index(i, k)
-                    jl = Index(j, l)
-                    ikjl = Index(ik, jl)
-
-                    F[i, j] += D[k, l] * (2 * eri[ijkl] - eri[ikjl])
-
-            # F[i, j] += H[i, j]
-    # print(F)
-    F = np.add(F, H)
+                    F[i, j] += D[k, l] * (
+                        2 * eri[indexIJKL(i, j, k, l)] - eri[indexIJKL(i, k, j, l)]
+                    )
     return F
 
 
@@ -253,12 +281,12 @@ def rms_Density_Matrix(D_new, D_old):
     for mu in s:
         for nu in s:
             val += math.pow((D_new[mu, nu] - D_old[mu, nu]), 2)
-    return val**(1 / 2)
+    return val ** (1 / 2)
 
 
-def self_consistent_field_iteration(H, D_0, symm_orth, eri, e, enuc, E_0_elec,
-                                    size, thres1, thres2):
-
+def self_consistent_field_iteration(
+    H, D_0, symm_orth, eri, e, enuc, E_0_elec, size, thres1, thres2
+):
     iterations = 1
     D_old = D_0
     E_elec_old = E_0_elec
@@ -300,16 +328,24 @@ def self_consistent_field_iteration(H, D_0, symm_orth, eri, e, enuc, E_0_elec,
     print("Iterations", iterations)
 
 
+def getNumberOfElectrons(num_atoms, elements):
+    num_electrons = 0
+    for i in range(num_atoms):
+        num_electrons += elements[i]
+    return num_electrons
+
+
 def main():
-    input_dir = "input/h2o/STO-3G"
-    input_dir = "../cpp/data"
-    # input_dir = "input/h2o/DZ"
-    e = 10
+    input_dir = "../cpp/data/t1"
     thres1 = 1e-11
     thres2 = 1e-11
 
     # enuc, s, t, v, size = read_inputs(input_dir)
-    enuc, s, t, v, size = read_inputs_cpp(input_dir)
+    # enuc, s, t, v, size = read_inputs_cpp(input_dir)
+    enuc, s, t, v, size, num_atoms, elements = read_inputs_cpp_datapath(input_dir)
+
+    e = getNumberOfElectrons(num_atoms, elements)
+    print("Number of Electrons:", e)
 
     print("enuc", enuc)
     # Core Hamiltonian matrix, H
@@ -336,8 +372,7 @@ def main():
     C_0 = np.matmul(symm_orth, C_0_prime)
 
     print("\nC_0")
-    print_2d_array(C_0,
-                   size)  # brent said sign doesn't matter here so try next
+    print_2d_array(C_0, size)
     # III. 4
     D_0 = Density_Matrix(C_0, e)
     print("\nD_0")
@@ -352,8 +387,9 @@ def main():
     print("Size", size)
     eri = read_two_e_repulsion(input_dir, size)
 
-    self_consistent_field_iteration(H, D_0, symm_orth, eri, e, enuc, E_0_elec,
-                                    size, thres1, thres2)
+    self_consistent_field_iteration(
+        H, D_0, symm_orth, eri, e, enuc, E_0_elec, size, thres1, thres2
+    )
 
 
 if __name__ == "__main__":
