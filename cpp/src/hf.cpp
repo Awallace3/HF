@@ -2,11 +2,12 @@
 #include "input.hpp"
 #include "omp.h"
 #include "stdio.h"
-#include <Eigen/Dense>
 #include <ctime>
 #include <iostream>
 #include <string>
 #include <vector>
+// #include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 using namespace std;
 

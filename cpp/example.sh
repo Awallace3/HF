@@ -2,7 +2,7 @@
 
 echo 'Ensure you have activated a conda environment that has psi4 installed'
 cat example.sh
-export numThreads=10
+export numThreads=20
 rm -r build
 mkdir -p build
 cd build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=$CONDA_PREFIX ..

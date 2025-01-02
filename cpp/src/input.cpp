@@ -1,12 +1,13 @@
 #include "input.hpp"
 #include "helper.hpp"
-#include <Eigen/Dense>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
+// #include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 using namespace std;
 
